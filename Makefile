@@ -1,0 +1,1 @@
+javacc pascal_simplificado.jj
