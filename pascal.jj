@@ -1,0 +1,63 @@
+options {
+	STATIC = false;
+}
+
+PARSER_BEGIN(Pascal)
+import java.io.PrintStream; 
+
+class Pascal {
+	static public void main(String[] args)
+	throws Exception {
+		Pascal parser = new Pascal( System.in );
+		parser.Start( System.out );
+	}
+}
+PARSER_END(Pascal)
+
+
+SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
+TOKEN : { < PROGRAM       : "program" > }
+TOKEN : { < BOOLEAN       : "boolean" > }
+TOKEN : { < INT           : "int" > }
+TOKEN : { < PROCEDURE     : "procedure" > }
+TOKEN : { < BEGIN         : "begin" > }
+TOKEN : { < END           : "end" > }
+TOKEN : { < IF            : "if" > }
+TOKEN : { < THEN          : "then" > }
+TOKEN : { < ELSE          : "else" > }
+TOKEN : { < WHILE         : "while" > }
+TOKEN : { < CASE          : "case" > }
+TOKEN : { < OF            : "of" > }
+TOKEN : { < DIV           : "div" > }
+TOKEN : { < AND           : "and" > }
+TOKEN : { < NOT           : "not" > }
+TOKEN : { < EQUAL         : "=" > }
+TOKEN : { < ASSIGN        : ":=" > }
+TOKEN : { < DIFFERENT     : "<>" > }
+TOKEN : { < LESS          : "<" > }
+TOKEN : { < LESS_EQUAL    : "<=" > }
+TOKEN : { < GREATER_EQUAL : ">=" > }
+TOKEN : { < GREATER       : ">" > }
+TOKEN : { < PLUS          : "+" > }
+TOKEN : { < MINUS         : "-" > }
+TOKEN : { < TIMES         : "*" > }
+TOKEN : { < OR            : "or" > }
+TOKEN : { < TRUE          : "true" > }
+TOKEN : { < FALSE         : "false"  > }
+TOKEN : { < NUMBER        : (["0"-"9"])+ > }
+TOKEN : { < IDENTIFIER    : ["a"-"z","A"-"Z", "_"] (["a"-"z","A"-"Z","0"-"9","_"])* > }
+TOKEN : { < COMMA         : "," > }
+TOKEN : { < SEMICOLON     : ";" > }
+TOKEN : { < PERIOD        : "." > }
+TOKEN : { < O_PAR         : "(" > }
+TOKEN : { < C_PAR         : ")" > }
+TOKEN : { < O_BRACKET     : "[" > }
+TOKEN : { < C_BRACKET     : "]" > }
+
+
+void Start(PrintStream printStream):
+{ Token t=null;}
+{
+	(
+	)
+}
