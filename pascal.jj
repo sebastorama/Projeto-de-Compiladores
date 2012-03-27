@@ -4,7 +4,6 @@ options {
 
 PARSER_BEGIN(Pascal)
 import java.io.PrintStream; 
-
 class Pascal {
 	static public void main(String[] args)
 	throws Exception {
@@ -16,9 +15,11 @@ PARSER_END(Pascal)
 
 
 SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
+SKIP : { < "{" > : IN_COMMENT }
+<IN_COMMENT> SKIP : { < "}" > : DEFAULT | < ~[] > }
 TOKEN : { < PROGRAM       : "program" > }
 TOKEN : { < BOOLEAN       : "boolean" > }
-TOKEN : { < INT           : "int" > }
+TOKEN : { < INTEGER       : "integer" > }
 TOKEN : { < PROCEDURE     : "procedure" > }
 TOKEN : { < BEGIN         : "begin" > }
 TOKEN : { < END           : "end" > }
@@ -45,6 +46,8 @@ TOKEN : { < OR            : "or" > }
 TOKEN : { < TRUE          : "true" > }
 TOKEN : { < FALSE         : "false"  > }
 TOKEN : { < NUMBER        : (["0"-"9"])+ > }
+TOKEN : { < READ          : "read" > }
+TOKEN : { < WRITE         : "write" > }
 TOKEN : { < IDENTIFIER    : ["a"-"z","A"-"Z", "_"] (["a"-"z","A"-"Z","0"-"9","_"])* > }
 TOKEN : { < COMMA         : "," > }
 TOKEN : { < SEMICOLON     : ";" > }
@@ -53,6 +56,7 @@ TOKEN : { < O_PAR         : "(" > }
 TOKEN : { < C_PAR         : ")" > }
 TOKEN : { < O_BRACKET     : "[" > }
 TOKEN : { < C_BRACKET     : "]" > }
+TOKEN : { < COLON         : ":" > }
 
 
 void Start(PrintStream printStream):
@@ -61,13 +65,12 @@ void Start(PrintStream printStream):
 	(
 		t=<PROGRAM>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPROGRAM\t - "+t.toString()); } |
 		t=<BOOLEAN>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tBOOLEAN\t - "+t.toString()); } |
-		t=<INT>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tINT\t - "+t.toString()); } |
+		t=<INTEGER>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tINTEGER\t - "+t.toString()); } |
 		t=<PROCEDURE>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPROCEDURE\t - "+t.toString()); } |
 		t=<BEGIN>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tBEGIN\t - "+t.toString()); } |
 		t=<END>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tEND\t - "+t.toString()); } |
 		t=<IF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tIF\t - "+t.toString()); } |
 		t=<THEN>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTHEN\t - "+t.toString()); } |
-		t=<ELSE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tELSE\t - "+t.toString()); } |
 		t=<WHILE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWHILE\t - "+t.toString()); } |
 		t=<CASE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCASE\t - "+t.toString()); } |
 		t=<OF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOF\t - "+t.toString()); } |
@@ -95,6 +98,10 @@ void Start(PrintStream printStream):
 		t=<O_PAR>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tO_PAR\t - "+t.toString()); } |
 		t=<C_PAR>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_PAR\t - "+t.toString()); } |
 		t=<O_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tO_BRACKET\t - "+t.toString()); } |
-		t=<C_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_BRACKET\t - "+t.toString()); }
-	)
+		t=<C_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_BRACKET\t - "+t.toString()); } |
+		t=<COLON>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCOLON\t - "+t.toString()); } |
+        t=<READ>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tREAD\t - "+t.toString()); } |
+        t=<WRITE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWRITE\t - "+t.toString()); }
+	 )*
+	 <EOF>
 }
