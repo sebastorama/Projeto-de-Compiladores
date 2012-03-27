@@ -59,5 +59,42 @@ void Start(PrintStream printStream):
 { Token t=null;}
 {
 	(
+		t=<PROGRAM>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPROGRAM\t - "+t.toString()); } |
+		t=<BOOLEAN>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tBOOLEAN\t - "+t.toString()); } |
+		t=<INT>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tINT\t - "+t.toString()); } |
+		t=<PROCEDURE>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPROCEDURE\t - "+t.toString()); } |
+		t=<BEGIN>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tBEGIN\t - "+t.toString()); } |
+		t=<END>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tEND\t - "+t.toString()); } |
+		t=<IF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tIF\t - "+t.toString()); } |
+		t=<THEN>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTHEN\t - "+t.toString()); } |
+		t=<ELSE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tELSE\t - "+t.toString()); } |
+		t=<WHILE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWHILE\t - "+t.toString()); } |
+		t=<CASE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCASE\t - "+t.toString()); } |
+		t=<OF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOF\t - "+t.toString()); } |
+		t=<DIV>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDIV\t - "+t.toString()); } |
+		t=<AND>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tAND\t - "+t.toString()); } |
+		t=<NOT>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tNOT\t - "+t.toString()); } |
+		t=<EQUAL>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tEQUAL\t - "+t.toString()); } |
+		t=<ASSIGN>        { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tASSIGN\t - "+t.toString()); } |
+		t=<DIFFERENT>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDIFFERENT\t - "+t.toString()); } |
+		t=<LESS>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tLESS\t - "+t.toString()); } |
+		t=<LESS_EQUAL>    { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tLESS_EQUAL\t - "+t.toString()); } |
+		t=<GREATER_EQUAL> { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tGREATER_EQUAL\t - "+t.toString()); } |
+		t=<GREATER>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tGREATER\t - "+t.toString()); } |
+		t=<PLUS>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPLUS\t - "+t.toString()); } |
+		t=<MINUS>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tMINUS\t - "+t.toString()); } |
+		t=<TIMES>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTIMES\t - "+t.toString()); } |
+		t=<OR>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOR\t - "+t.toString()); } |
+		t=<TRUE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTRUE\t - "+t.toString()); } |
+		t=<FALSE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tFALSE\t - "+t.toString()); } |
+		t=<NUMBER>        { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tNUMBER\t - "+t.toString()); } |
+		t=<IDENTIFIER>    { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tIDENTIFIER\t - "+t.toString()); } |
+		t=<COMMA>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCOMMA\t - "+t.toString()); } |
+		t=<SEMICOLON>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tSEMICOLON\t - "+t.toString()); } |
+		t=<PERIOD>        { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPERIOD\t - "+t.toString()); } |
+		t=<O_PAR>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tO_PAR\t - "+t.toString()); } |
+		t=<C_PAR>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_PAR\t - "+t.toString()); } |
+		t=<O_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tO_BRACKET\t - "+t.toString()); } |
+		t=<C_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_BRACKET\t - "+t.toString()); }
 	)
 }
