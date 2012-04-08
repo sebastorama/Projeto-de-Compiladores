@@ -3,7 +3,8 @@ begin
   var_1: integer;
   var_2: integer;
   var_3: integer;
-
+  
+  %
   var_1 := 1;
   var_2 := 2;
   {var_1 := 3;
