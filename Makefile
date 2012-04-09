@@ -8,8 +8,8 @@ lex_test3:
 	java -cp . Pascal < examples/lexical/correct3.pas
 lex_test4:
 	java -cp . Pascal < examples/lexical/incorrect1.pas
-lex_test5:
-	java -cp . Pascal < examples/lexical/incorrect2.pas
+
+lex_all: lex_test1 lex_test2 lex_test3 lex_test4
 
 clean:
 	rm *.java && rm *.class

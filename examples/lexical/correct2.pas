@@ -1,5 +1,6 @@
 program Teste2;
-procedure fatorial(i : integer, res : integer);
+procedure fatorial(i : integer, var res : integer);
+var
 aux :integer;
 begin
 	aux := 1;
@@ -13,7 +14,6 @@ end;
 
 begin
 	res: integer;
-
 
 	fatorial(5, res);
 end.

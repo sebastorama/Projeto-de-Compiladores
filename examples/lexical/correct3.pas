@@ -1,10 +1,11 @@
 program Teste3;
+var
 	a : integer;
 
 { Mantem uma lista com os 10 primeiros inteiros primos. Caso
   um valor invalido seja pedido (nao seja entre 1 e 10) 
   o programa retorna -1 }
-procedure primeiros_primos(i : integer, res : integer);
+procedure primeiros_primos(i : integer, var res : integer);
 begin
 	case i of
 		1: res := 1;
