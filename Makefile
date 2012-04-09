@@ -1,13 +1,15 @@
 all: precompile_javacc apply_patches build_precompiled_javacc
 
 lex_test1:
-	echo "========== Lexical Test 1 - Should pass: ===========\n\n\n"
 	java -cp . Pascal < examples/lexical/correct1.pas
-	echo "========== End of Lexical Test 1         ===========\n\n"
 lex_test2:
-	echo "Lexical Test 2 - Should pass:"
+	java -cp . Pascal < examples/lexical/correct2.pas
 lex_test3:
-	echo "Lexical Test 3 - Should give an error:"
+	java -cp . Pascal < examples/lexical/correct3.pas
+lex_test4:
+	java -cp . Pascal < examples/lexical/incorrect1.pas
+lex_test5:
+	java -cp . Pascal < examples/lexical/incorrect2.pas
 
 clean:
 	rm *.java && rm *.class

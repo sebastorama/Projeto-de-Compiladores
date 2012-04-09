@@ -71,6 +71,7 @@ void Start(PrintStream printStream):
 		t=<END>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tEND\t - "+t.toString()); } |
 		t=<IF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tIF\t - "+t.toString()); } |
 		t=<THEN>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTHEN\t - "+t.toString()); } |
+		t=<ELSE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tELSE\t - "+t.toString()); } |
 		t=<WHILE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWHILE\t - "+t.toString()); } |
 		t=<CASE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCASE\t - "+t.toString()); } |
 		t=<OF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOF\t - "+t.toString()); } |
