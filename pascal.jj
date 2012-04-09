@@ -27,6 +27,7 @@ TOKEN : { < IF            : "if" > }
 TOKEN : { < THEN          : "then" > }
 TOKEN : { < ELSE          : "else" > }
 TOKEN : { < WHILE         : "while" > }
+TOKEN : { < DO            : "do" > }
 TOKEN : { < CASE          : "case" > }
 TOKEN : { < OF            : "of" > }
 TOKEN : { < DIV           : "div" > }
@@ -73,6 +74,7 @@ void Start(PrintStream printStream):
 		t=<THEN>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTHEN\t - "+t.toString()); } |
 		t=<ELSE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tELSE\t - "+t.toString()); } |
 		t=<WHILE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWHILE\t - "+t.toString()); } |
+		t=<DO>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDO\t - "+t.toString()); } |
 		t=<CASE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCASE\t - "+t.toString()); } |
 		t=<OF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOF\t - "+t.toString()); } |
 		t=<DIV>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDIV\t - "+t.toString()); } |
