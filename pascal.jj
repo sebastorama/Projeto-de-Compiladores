@@ -125,6 +125,7 @@ void parte_declaracao_variaveis(): {}
 	<VAR>
 	declaracao_variaveis()
 	(
+		LOOKAHEAD(2)
 		<SEMICOLON>
 		declaracao_variaveis()
 	)*
@@ -236,9 +237,9 @@ void atribuicao_ou_chamada_de_procedimento(): {}
 /*15. <escolhe proced ou atrib> ::= <chamada de procedimento> | <atribuição>*/
 void escolhe_proced_ou_atrib(): {}
 {
-	chamada_procedimento()
-	|
 	atribuicao()
+	|
+	chamada_procedimento()
 }
 
 /*16. <chamada de procedimento> ::= [ ( <lista de expressões> ) ]*/
