@@ -18,6 +18,7 @@ SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
 SKIP : { < "{" > : IN_COMMENT }
 <IN_COMMENT> SKIP : { < "}" > : DEFAULT | < ~[] > }
 TOKEN : { < PROGRAM       : "program" > }
+TOKEN : { < VAR           : "var" > }
 TOKEN : { < BOOLEAN       : "boolean" > }
 TOKEN : { < INTEGER       : "integer" > }
 TOKEN : { < PROCEDURE     : "procedure" > }
@@ -63,48 +64,354 @@ TOKEN : { < COLON         : ":" > }
 void Start(PrintStream printStream):
 { Token t=null;}
 {
-	(
-		t=<PROGRAM>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPROGRAM\t - "+t.toString()); } |
-		t=<BOOLEAN>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tBOOLEAN\t - "+t.toString()); } |
-		t=<INTEGER>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tINTEGER\t - "+t.toString()); } |
-		t=<PROCEDURE>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPROCEDURE\t - "+t.toString()); } |
-		t=<BEGIN>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tBEGIN\t - "+t.toString()); } |
-		t=<END>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tEND\t - "+t.toString()); } |
-		t=<IF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tIF\t - "+t.toString()); } |
-		t=<THEN>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTHEN\t - "+t.toString()); } |
-		t=<ELSE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tELSE\t - "+t.toString()); } |
-		t=<WHILE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWHILE\t - "+t.toString()); } |
-		t=<DO>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDO\t - "+t.toString()); } |
-		t=<CASE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCASE\t - "+t.toString()); } |
-		t=<OF>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOF\t - "+t.toString()); } |
-		t=<DIV>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDIV\t - "+t.toString()); } |
-		t=<AND>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tAND\t - "+t.toString()); } |
-		t=<NOT>           { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tNOT\t - "+t.toString()); } |
-		t=<EQUAL>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tEQUAL\t - "+t.toString()); } |
-		t=<ASSIGN>        { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tASSIGN\t - "+t.toString()); } |
-		t=<DIFFERENT>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tDIFFERENT\t - "+t.toString()); } |
-		t=<LESS>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tLESS\t - "+t.toString()); } |
-		t=<LESS_EQUAL>    { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tLESS_EQUAL\t - "+t.toString()); } |
-		t=<GREATER_EQUAL> { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tGREATER_EQUAL\t - "+t.toString()); } |
-		t=<GREATER>       { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tGREATER\t - "+t.toString()); } |
-		t=<PLUS>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPLUS\t - "+t.toString()); } |
-		t=<MINUS>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tMINUS\t - "+t.toString()); } |
-		t=<TIMES>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTIMES\t - "+t.toString()); } |
-		t=<OR>            { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tOR\t - "+t.toString()); } |
-		t=<TRUE>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tTRUE\t - "+t.toString()); } |
-		t=<FALSE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tFALSE\t - "+t.toString()); } |
-		t=<NUMBER>        { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tNUMBER\t - "+t.toString()); } |
-		t=<IDENTIFIER>    { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tIDENTIFIER\t - "+t.toString()); } |
-		t=<COMMA>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCOMMA\t - "+t.toString()); } |
-		t=<SEMICOLON>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tSEMICOLON\t - "+t.toString()); } |
-		t=<PERIOD>        { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tPERIOD\t - "+t.toString()); } |
-		t=<O_PAR>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tO_PAR\t - "+t.toString()); } |
-		t=<C_PAR>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_PAR\t - "+t.toString()); } |
-		t=<O_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tO_BRACKET\t - "+t.toString()); } |
-		t=<C_BRACKET>     { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tC_BRACKET\t - "+t.toString()); } |
-		t=<COLON>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tCOLON\t - "+t.toString()); } |
-        t=<READ>          { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tREAD\t - "+t.toString()); } |
-        t=<WRITE>         { System.out.println("@("+t.beginLine+","+t.beginColumn+")\tWRITE\t - "+t.toString()); }
-	 )*
-	 <EOF>
+	programa()
+	<EOF>
+	{
+
+	}
 }
+
+
+/*1. <programa> ::= */
+/*program <identificador> ;*/
+/*<bloco>.*/
+void programa(): {}
+{
+  <PROGRAM>
+  <IDENTIFIER>
+  <SEMICOLON>
+  bloco()
+  <PERIOD>
+}
+
+
+/*2. <bloco> ::= */
+/*[<parte de declarações de variáveis>]*/
+/*[<parte de declarações de procedimentos>]*/
+/*<comando composto>*/
+void bloco(): {}
+{
+	[parte_declaracao_variaveis()]
+	[parte_declaracao_procedimento()]
+	comando_composto()
+}
+
+
+/*3.   <tipo> ::= <identificador> */
+void tipo(): {}
+{
+	<IDENTIFIER>
+}
+
+/*4. <constante> ::= [+|-] (<identificador> | <numero_inteiro>)*/
+void constante(): {}
+{
+	[
+		<PLUS>
+		|
+		<MINUS>
+	]
+	(
+		<IDENTIFIER>
+		|
+		<NUMBER>
+	)
+}
+
+/*5.  <parte de declarações de variáveis> ::=*/
+/*var <declaração de variáveis> {; <declaração de variáveis>};*/
+void parte_declaracao_variaveis(): {}
+{
+	<VAR>
+	declaracao_variaveis()
+	(
+		<SEMICOLON>
+		declaracao_variaveis()
+	)*
+	<SEMICOLON>
+}
+
+
+
+/*6. <declaração de variáveis>::=*/
+/*<lista de identificadores> : <tipo>*/
+void declaracao_variaveis(): {}
+{
+	lista_identificadores()
+	<COLON>
+	tipo()
+}
+
+/*7. <lista de identificadores> ::= <identificador> {, <identificador>}*/
+void lista_identificadores(): {}
+{
+	<IDENTIFIER>
+	(
+		<COMMA>
+		<IDENTIFIER>
+	)*
+}
+
+
+/*8. <parte de declarações de procedimentos> ::=*/
+/*{declaração de procedimento> ;}*/
+void parte_declaracao_procedimento(): {}
+{
+		declaracao_procedimento()
+}
+
+/*9. <declaração de procedimento> ::=*/
+/*procedure <identificador>*/
+/*[<parâmetros formais>] ; <bloco>*/
+void declaracao_procedimento(): {}
+{
+	<PROCEDURE>
+	<IDENTIFIER>
+	[parametros_formais()]
+	<SEMICOLON>
+	bloco()
+}
+
+/*10. <parâmetros formais> ::=*/
+/*(<seção de parâmetros formais> { ; <seção de parâmetros formais>} )*/
+void parametros_formais(): {}
+{
+	<O_PAR>
+	secao_parametros_formais()
+	(
+		<SEMICOLON>
+		secao_parametros_formais()
+	)*
+	<C_PAR>
+}
+
+/*11. <seção de parâmetros formais> ::=*/
+/*[var] <lista de identificadores> : <identificador>*/
+void secao_parametros_formais(): {}
+{
+	[<VAR>]
+	lista_identificadores()
+	<COLON>	
+	<IDENTIFIER>
+}
+
+/*12. <comando composto> ::=  begin <comando> { ; <comando>} end*/
+void comando_composto(): {}
+{
+	<BEGIN>
+	comando()
+	(
+		<SEMICOLON>
+		comando()
+	)*
+	<END>
+}
+
+/*	  13. <comado> ::=*/
+/*	  <atribuição ou chamada de procedimento>*/
+/*	  | <comando composto>*/
+/*	  | <comando condicional 1>*/
+/*	  | <comando condicional 2>*/
+/*	  | <comando repetitivo 1>*/
+void comando(): {}
+{
+	atribuicao_ou_chamada_de_procedimento()
+	|
+	comando_composto()
+	|
+	comando_condicional_1()
+	|
+	comando_condicional_2()
+	|
+	comando_repetitivo_1()
+}
+
+/*14. <atribuição ou chamada de procedimento>::= <identificador> <escolhe proced ou atrib>*/
+void atribuicao_ou_chamada_de_procedimento(): {}
+{
+	<IDENTIFIER>
+	escolhe_proced_ou_atrib()
+}
+
+/*15. <escolhe proced ou atrib> ::= <chamada de procedimento> | <atribuição>*/
+void escolhe_proced_ou_atrib(): {}
+{
+	chamada_procedimento()
+	|
+	atribuicao()
+}
+
+/*16. <chamada de procedimento> ::= [ ( <lista de expressões> ) ]*/
+void chamada_procedimento(): {}
+{
+	[
+		<O_PAR>
+		lista_expressoes()
+		<C_PAR>
+	]
+}
+
+/*17. <atribuição> ::= := <expressão>*/
+void atribuicao(): {}
+{
+	<ASSIGN>
+	expressao()
+}
+
+/*18. <comando condicional 1> ::=*/
+/*if <expressão> then <comando>*/
+/*[else <comando>]*/
+void comando_condicional_1(): {}
+{
+	<IF>
+	expressao()
+	<THEN>
+	comando()
+	[
+		LOOKAHEAD(2)
+		<ELSE>
+		comando()
+	]
+}
+
+/*19. <comando condicional 2> ::=*/
+/*case <expressão> of <elemento do case> */
+/*{ ;  <elemento do case>} [else <comando>] end*/
+void comando_condicional_2(): {}
+{
+	<CASE>
+	expressao()
+	<OF>
+	elemento_case()
+	(
+		<SEMICOLON>
+		elemento_case()
+	)*
+	[
+		<ELSE>
+		comando()
+	]
+	<END>
+}
+
+/*20. <elemento do case> ::= <constante>*/
+/*{, constante>} : <comando>*/
+void elemento_case(): {}
+{
+	constante()
+	(
+		<COMMA>
+		constante()
+	)*
+	<COLON>
+	comando()
+}
+
+/*21. <comando repetitivo 1> ::=*/
+/*while <expressão> do <comando>*/
+void comando_repetitivo_1(): {}
+{
+	<WHILE>
+	expressao()
+	<DO>
+	comando()
+}
+
+/*22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]*/
+void expressao(): {}
+{
+	expressao_simples()
+	[
+		relacao()
+		expressao_simples()
+	]	
+}
+
+/*23. <relação> ::=   = | <> | < | <= | >= | >*/
+void relacao(): {}
+{
+	<EQUAL>
+	|
+	<DIFFERENT>
+	|
+	<LESS>
+	|
+	<LESS_EQUAL>
+	|
+	<GREATER_EQUAL>
+	|
+	<GREATER>
+}
+
+
+/*24. <expressão simples> ::= */
+/*[+ | -] <termo> {(+ | - | or) <termo>}*/
+void expressao_simples(): {}
+{
+	[
+		<PLUS>
+		|
+		<MINUS>
+	]
+	termo()
+	(
+		(
+			<PLUS>
+			|
+			<MINUS>
+			|
+			<OR>
+		)
+		termo()
+	)*
+}
+
+/*25. <termo> ::=*/
+/*<fator> {(* | div | and ) <fator> }*/
+void termo(): {}
+{
+	fator()
+	(
+		(
+			<TIMES>
+			|
+			<DIV>
+			|
+			<AND>
+		)
+		fator()
+	)*
+}
+
+/*26. <fator> ::=*/
+/*<variavel>*/
+/*| <número>*/
+/*| ( <expressão> )*/
+/*| not <fator>*/
+void fator(): {}
+{
+	variavel()
+	|
+	<NUMBER>
+	|
+	<O_PAR> expressao() <C_PAR>
+	|
+	<NOT> fator()
+}
+
+/*27. <variável> ::= <identificador>*/
+void variavel(): {}
+{
+	<IDENTIFIER>
+}
+
+/*28. <lista de expressões> ::=  <expressão> {, <expressão>}*/
+void lista_expressoes(): {}
+{
+	expressao()
+	(
+		<COMMA>
+		expressao()
+	)*
+}
+
