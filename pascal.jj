@@ -72,9 +72,9 @@ void Start(PrintStream printStream):
 }
 
 
-/*1. <programa> ::= */
-/*program <identificador> ;*/
-/*<bloco>.*/
+/* 1. <programa> ::=                                                                        */
+/* program <identificador> ;                                                                */
+/* <bloco>.                                                                                 */
 void programa(): {}
 {
   <PROGRAM>
@@ -85,10 +85,10 @@ void programa(): {}
 }
 
 
-/*2. <bloco> ::= */
-/*[<parte de declarações de variáveis>]*/
-/*[<parte de declarações de procedimentos>]*/
-/*<comando composto>*/
+/* 2. <bloco> ::=                                                                           */
+/* [<parte de declarações de variáveis>]                                                    */
+/* [<parte de declarações de procedimentos>]                                                */
+/* <comando composto>                                                                       */
 void bloco(): {}
 {
 	[parte_declaracao_variaveis()]
@@ -97,13 +97,13 @@ void bloco(): {}
 }
 
 
-/*3.   <tipo> ::= <identificador> */
+/* 3.   <tipo> ::= <identificador>                                                          */
 void tipo(): {}
 {
 	<IDENTIFIER>
 }
 
-/*4. <constante> ::= [+|-] (<identificador> | <numero_inteiro>)*/
+/* 4. <constante> ::= [+|-] (<identificador> | <numero_inteiro>)                            */
 void constante(): {}
 {
 	[
@@ -118,24 +118,23 @@ void constante(): {}
 	)
 }
 
-/*5.  <parte de declarações de variáveis> ::=*/
-/*var <declaração de variáveis> {; <declaração de variáveis>};*/
+/* 5.  <parte de declarações de variáveis> ::=                                              */
+/* var <declaração de variáveis> ;{<declaração de variáveis> ;}                             */
 void parte_declaracao_variaveis(): {}
 {
 	<VAR>
 	declaracao_variaveis()
-	(
-		LOOKAHEAD(2)
-		<SEMICOLON>
-		declaracao_variaveis()
-	)*
 	<SEMICOLON>
+	(
+		declaracao_variaveis()
+		<SEMICOLON>
+	)*
 }
 
 
 
-/*6. <declaração de variáveis>::=*/
-/*<lista de identificadores> : <tipo>*/
+/* 6. <declaração de variáveis>::=                                                          */
+/* <lista de identificadores> : <tipo>                                                      */
 void declaracao_variaveis(): {}
 {
 	lista_identificadores()
@@ -143,7 +142,7 @@ void declaracao_variaveis(): {}
 	tipo()
 }
 
-/*7. <lista de identificadores> ::= <identificador> {, <identificador>}*/
+/* 7. <lista de identificadores> ::= <identificador> {, <identificador>}                    */
 void lista_identificadores(): {}
 {
 	<IDENTIFIER>
@@ -154,16 +153,16 @@ void lista_identificadores(): {}
 }
 
 
-/*8. <parte de declarações de procedimentos> ::=*/
-/*{declaração de procedimento> ;}*/
+/* 8. <parte de declarações de procedimentos> ::=                                           */
+/* {declaração de procedimento> ;}                                                          */
 void parte_declaracao_procedimento(): {}
 {
 		declaracao_procedimento()
 }
 
-/*9. <declaração de procedimento> ::=*/
-/*procedure <identificador>*/
-/*[<parâmetros formais>] ; <bloco>*/
+/* 9. <declaração de procedimento> ::=                                                      */
+/* procedure <identificador>                                                                */
+/* [<parâmetros formais>] ; <bloco>                                                         */
 void declaracao_procedimento(): {}
 {
 	<PROCEDURE>
@@ -173,8 +172,8 @@ void declaracao_procedimento(): {}
 	bloco()
 }
 
-/*10. <parâmetros formais> ::=*/
-/*(<seção de parâmetros formais> { ; <seção de parâmetros formais>} )*/
+/* 10. <parâmetros formais> ::=                                                             */
+/* (<seção de parâmetros formais> { ; <seção de parâmetros formais>} )                      */
 void parametros_formais(): {}
 {
 	<O_PAR>
@@ -186,17 +185,17 @@ void parametros_formais(): {}
 	<C_PAR>
 }
 
-/*11. <seção de parâmetros formais> ::=*/
-/*[var] <lista de identificadores> : <identificador>*/
+/* 11. <seção de parâmetros formais> ::=                                                    */
+/* [var] <lista de identificadores> : <identificador>                                       */
 void secao_parametros_formais(): {}
 {
 	[<VAR>]
 	lista_identificadores()
-	<COLON>	
+	<COLON>
 	<IDENTIFIER>
 }
 
-/*12. <comando composto> ::=  begin <comando> { ; <comando>} end*/
+/* 12. <comando composto> ::=  begin <comando> { ; <comando>} end                           */
 void comando_composto(): {}
 {
 	<BEGIN>
@@ -208,12 +207,12 @@ void comando_composto(): {}
 	<END>
 }
 
-/*	  13. <comado> ::=*/
-/*	  <atribuição ou chamada de procedimento>*/
-/*	  | <comando composto>*/
-/*	  | <comando condicional 1>*/
-/*	  | <comando condicional 2>*/
-/*	  | <comando repetitivo 1>*/
+/* 13. <comado> ::=                                                                         */
+/* <atribuição ou chamada de procedimento>                                                  */
+/* | <comando composto>                                                                     */
+/* | <comando condicional 1>                                                                */
+/* | <comando condicional 2>                                                                */
+/* | <comando repetitivo 1>                                                                 */
 void comando(): {}
 {
 	atribuicao_ou_chamada_de_procedimento()
@@ -227,14 +226,14 @@ void comando(): {}
 	comando_repetitivo_1()
 }
 
-/*14. <atribuição ou chamada de procedimento>::= <identificador> <escolhe proced ou atrib>*/
+/* 14. <atribuição ou chamada de procedimento>::= <identificador> <escolhe proced ou atrib> */
 void atribuicao_ou_chamada_de_procedimento(): {}
 {
 	<IDENTIFIER>
 	escolhe_proced_ou_atrib()
 }
 
-/*15. <escolhe proced ou atrib> ::= <chamada de procedimento> | <atribuição>*/
+/* 15. <escolhe proced ou atrib> ::=  <atribuição> | <chamada de procedimento>              */
 void escolhe_proced_ou_atrib(): {}
 {
 	atribuicao()
@@ -242,7 +241,7 @@ void escolhe_proced_ou_atrib(): {}
 	chamada_procedimento()
 }
 
-/*16. <chamada de procedimento> ::= [ ( <lista de expressões> ) ]*/
+/* 16. <chamada de procedimento> ::= [ ( <lista de expressões> ) ]                          */
 void chamada_procedimento(): {}
 {
 	[
@@ -252,16 +251,16 @@ void chamada_procedimento(): {}
 	]
 }
 
-/*17. <atribuição> ::= := <expressão>*/
+/* 17. <atribuição> ::= := <expressão>                                                      */
 void atribuicao(): {}
 {
 	<ASSIGN>
 	expressao()
 }
 
-/*18. <comando condicional 1> ::=*/
-/*if <expressão> then <comando>*/
-/*[else <comando>]*/
+/* 18. <comando condicional 1> ::=                                                          */
+/* if <expressão> then <comando>                                                            */
+/* [else <comando>]                                                                         */
 void comando_condicional_1(): {}
 {
 	<IF>
@@ -275,9 +274,9 @@ void comando_condicional_1(): {}
 	]
 }
 
-/*19. <comando condicional 2> ::=*/
-/*case <expressão> of <elemento do case> */
-/*{ ;  <elemento do case>} [else <comando>] end*/
+/* 19. <comando condicional 2> ::=                                                          */
+/* case <expressão> of <elemento do case>                                                   */
+/* { ;  <elemento do case>} [else <comando>] end                                            */
 void comando_condicional_2(): {}
 {
 	<CASE>
@@ -295,8 +294,8 @@ void comando_condicional_2(): {}
 	<END>
 }
 
-/*20. <elemento do case> ::= <constante>*/
-/*{, constante>} : <comando>*/
+/* 20. <elemento do case> ::= <constante>                                                   */
+/* {, constante>} : <comando>                                                               */
 void elemento_case(): {}
 {
 	constante()
@@ -308,8 +307,8 @@ void elemento_case(): {}
 	comando()
 }
 
-/*21. <comando repetitivo 1> ::=*/
-/*while <expressão> do <comando>*/
+/* 21. <comando repetitivo 1> ::=                                                           */
+/* while <expressão> do <comando>                                                           */
 void comando_repetitivo_1(): {}
 {
 	<WHILE>
@@ -318,17 +317,17 @@ void comando_repetitivo_1(): {}
 	comando()
 }
 
-/*22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]*/
+/* 22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]                  */
 void expressao(): {}
 {
 	expressao_simples()
 	[
 		relacao()
 		expressao_simples()
-	]	
+	]
 }
 
-/*23. <relação> ::=   = | <> | < | <= | >= | >*/
+/* 23. <relação> ::=   = | <> | < | <= | >= | >                                             */
 void relacao(): {}
 {
 	<EQUAL>
@@ -345,8 +344,8 @@ void relacao(): {}
 }
 
 
-/*24. <expressão simples> ::= */
-/*[+ | -] <termo> {(+ | - | or) <termo>}*/
+/* 24. <expressão simples> ::=                                                              */
+/* [+ | -] <termo> {(+ | - | or) <termo>}                                                   */
 void expressao_simples(): {}
 {
 	[
@@ -367,8 +366,8 @@ void expressao_simples(): {}
 	)*
 }
 
-/*25. <termo> ::=*/
-/*<fator> {(* | div | and ) <fator> }*/
+/* 25. <termo> ::=                                                                          */
+/* <fator> {(* | div | and ) <fator> }                                                      */
 void termo(): {}
 {
 	fator()
@@ -384,11 +383,11 @@ void termo(): {}
 	)*
 }
 
-/*26. <fator> ::=*/
-/*<variavel>*/
-/*| <número>*/
-/*| ( <expressão> )*/
-/*| not <fator>*/
+/* 26. <fator> ::=                                                                          */
+/* <variavel>                                                                               */
+/* | <número>                                                                               */
+/* | ( <expressão> )                                                                        */
+/* | not <fator>                                                                            */
 void fator(): {}
 {
 	variavel()
@@ -400,13 +399,13 @@ void fator(): {}
 	<NOT> fator()
 }
 
-/*27. <variável> ::= <identificador>*/
+/* 27. <variável> ::= <identificador>                                                       */
 void variavel(): {}
 {
 	<IDENTIFIER>
 }
 
-/*28. <lista de expressões> ::=  <expressão> {, <expressão>}*/
+/* 28. <lista de expressões> ::=  <expressão> {, <expressão>}                               */
 void lista_expressoes(): {}
 {
 	expressao()
