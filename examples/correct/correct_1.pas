@@ -10,5 +10,6 @@ begin
 	{var_1 := 3;
 	var_2 := 4;}
 	var_3 := var_1 + var_2;
-	read;   
+	read 
 end.
+

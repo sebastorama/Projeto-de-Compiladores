@@ -6,8 +6,10 @@ correct_2:
 	java -cp . Pascal < examples/correct/correct_2.pas
 correct_3:
 	java -cp . Pascal < examples/correct/correct_3.pas
+correct_4:
+	java -cp . Pascal < examples/correct/correct_4.pas
 
-correct_all: correct_1 correct_2 correct_3
+correct_all: correct_1 correct_2 correct_3 correct_4
 
 clean:
 	rm *.java && rm *.class

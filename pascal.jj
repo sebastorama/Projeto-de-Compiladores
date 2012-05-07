@@ -17,10 +17,9 @@ PARSER_END(Pascal)
 SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
 SKIP : { < "{" > : IN_COMMENT }
 <IN_COMMENT> SKIP : { < "}" > : DEFAULT | < ~[] > }
+TOKEN : { < COMMENT       : "{"
 TOKEN : { < PROGRAM       : "program" > }
 TOKEN : { < VAR           : "var" > }
-TOKEN : { < BOOLEAN       : "boolean" > }
-TOKEN : { < INTEGER       : "integer" > }
 TOKEN : { < PROCEDURE     : "procedure" > }
 TOKEN : { < BEGIN         : "begin" > }
 TOKEN : { < END           : "end" > }
@@ -45,11 +44,7 @@ TOKEN : { < PLUS          : "+" > }
 TOKEN : { < MINUS         : "-" > }
 TOKEN : { < TIMES         : "*" > }
 TOKEN : { < OR            : "or" > }
-TOKEN : { < TRUE          : "true" > }
-TOKEN : { < FALSE         : "false"  > }
 TOKEN : { < NUMBER        : (["0"-"9"])+ > }
-TOKEN : { < READ          : "read" > }
-TOKEN : { < WRITE         : "write" > }
 TOKEN : { < IDENTIFIER    : ["a"-"z","A"-"Z", "_"] (["a"-"z","A"-"Z","0"-"9","_"])* > }
 TOKEN : { < COMMA         : "," > }
 TOKEN : { < SEMICOLON     : ";" > }
@@ -67,7 +62,7 @@ void Start(PrintStream printStream):
 	programa()
 	<EOF>
 	{
-
+		System.out.println("Programa correto!");
 	}
 }
 
