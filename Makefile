@@ -1,15 +1,13 @@
 all: precompile_javacc apply_patches build_precompiled_javacc
 
-lex_test1:
-	java -cp . Pascal < examples/lexical/correct1.pas
-lex_test2:
-	java -cp . Pascal < examples/lexical/correct2.pas
-lex_test3:
-	java -cp . Pascal < examples/lexical/correct3.pas
-lex_test4:
-	java -cp . Pascal < examples/lexical/incorrect1.pas
+correct_1:
+	java -cp . Pascal < examples/correct/correct_1.pas
+correct_2:
+	java -cp . Pascal < examples/correct/correct_2.pas
+correct_3:
+	java -cp . Pascal < examples/correct/correct_3.pas
 
-lex_all: lex_test1 lex_test2 lex_test3 lex_test4
+correct_all: correct_1 correct_2 correct_3
 
 clean:
 	rm *.java && rm *.class
