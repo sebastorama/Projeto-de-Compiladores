@@ -8,8 +8,17 @@ correct_3:
 	java -cp . Pascal < examples/correct/correct_3.pas
 correct_4:
 	java -cp . Pascal < examples/correct/correct_4.pas
-
 correct_all: correct_1 correct_2 correct_3 correct_4
+
+sintatical_error_1:
+	java -cp . Pascal < examples/sintatical_errors/sintatical_error_1.pas
+sintatical_error_2:
+	java -cp . Pascal < examples/sintatical_errors/sintatical_error_2.pas
+sintatical_error_3:
+	java -cp . Pascal < examples/sintatical_errors/sintatical_error_3.pas
+
+lexical_error_1:
+	java -cp . Pascal < examples/lexical_errors/lexical_error_1.pas
 
 clean:
 	rm *.java && rm *.class
