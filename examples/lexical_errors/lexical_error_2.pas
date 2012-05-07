@@ -12,7 +12,9 @@ begin
 	end;
 	res := aux
 end
-%
+
 begin
+	{
 	fatorial(5, res)
 end.
+

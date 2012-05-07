@@ -15,8 +15,8 @@ PARSER_END(Pascal)
 
 
 SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
-SKIP : { < "{" > : IN_COMMENT }
-<IN_COMMENT> SKIP : { < "}" > : DEFAULT | < ~[] > }
+MORE : { < "{" > : IN_COMMENT }
+<IN_COMMENT> MORE : { < "}" > : DEFAULT | < ~[] > }
 TOKEN : { < PROGRAM       : "program" > }
 TOKEN : { < VAR           : "var" > }
 TOKEN : { < PROCEDURE     : "procedure" > }

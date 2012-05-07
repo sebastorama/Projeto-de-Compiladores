@@ -21,6 +21,8 @@ sintatical_error_all: sintatical_error_1 sintatical_error_2 sintatical_error_3
 
 lexical_error_1:
 	- java -cp . Pascal < examples/lexical_errors/lexical_error_1.pas
+lexical_error_2:
+	- java -cp . Pascal < examples/lexical_errors/lexical_error_2.pas
 
 all_tests: correct_all sintatical_error_all lexical_error_1
 
