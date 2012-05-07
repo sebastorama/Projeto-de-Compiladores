@@ -1,5 +1,5 @@
 program Teste2;
-procedure fatorial(i : integer, var res : integer);
+procedure fatorial(i : integer; var res : integer);
 var
 	aux :integer;
 begin
@@ -7,13 +7,13 @@ begin
 	while i > 0 do
 	begin
 		aux := aux * i; 
-		i := i-1;
+		i := i-1
 	end;
-	res := aux;
-end;
+	res := aux
+end
 %
 begin
 	res: integer;
 
-	fatorial(5, res);
+	fatorial(5, res)
 end.
