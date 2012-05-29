@@ -1,4 +1,10 @@
-*.java
 *.class
 doc/*
 annotations
+ParseException.java
+Pascal.java
+PascalConstants.java
+PascalTokenManager.java
+SimpleCharStream.java
+Token.java
+TokenMgrError.java
