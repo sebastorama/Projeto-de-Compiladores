@@ -1,7 +1,8 @@
 public class SymbolTable {
-	public boolean isDeclared(String symbol, int current_level) {
-		return false;
+	public void declared(String symbol, int current_level) {
+
 	}
+
 	public void insert(String symbol, boolean ref, int current_level) {
 
 	}
@@ -12,6 +13,10 @@ public class SymbolTable {
 	}
 
 	public void destroy(int current_level) {
+
+	}
+
+	public void setAttributes() {
 
 	}
 }

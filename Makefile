@@ -37,3 +37,6 @@ precompile_javacc:
 
 build_precompiled_javacc:
 	javac -cp . Pascal.java
+
+build_rs:
+	javac -cp . RS.java
