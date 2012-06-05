@@ -1,19 +1,45 @@
+import java.util.Hashtable;
+import java.util.ArrayList;
+
 public class SymbolTable {
-	public void declared(String symbol, int current_level) {
+	ArrayList<Hashtable <String, Symbol>> tables;
 
+	public SymbolTable() {
+		tables = new ArrayList<Hashtable <String, Symbol>>();
 	}
 
-	public void insert(String symbol, boolean ref, int current_level) {
+	public Hashtable findOrCreateTable(int level) {
+		Hashtable<String, Symbol> table;
 
+		if(tables.size() <= level) {
+			int i;
+			for(i=tables.size(); i<=level; i++) {
+				table = new Hashtable<String, Symbol>();
+				tables.add(i, table);
+			}
+		}
+
+		return tables.get(level);
 	}
 
-	public boolean search(String symbol, boolean ref) {
-
+	public boolean declared(String id, int level) {
+		int i;
+		for(i=0; i<=level; i++) {
+			if(findOrCreateTable(i).containsKey(id)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
-	public void destroy(int current_level) {
+	public void insert(String id, boolean ref, int level) {
+		Hashtable<String, Symbol> table = findOrCreateTable(level);
+		Symbol symbol = new Symbol();
+		table.put(id, symbol);
+	}
 
+	public void destroy(int level) {
+		findOrCreateTable(level).clear();
 	}
 
 	public void setAttributes() {

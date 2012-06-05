@@ -40,3 +40,12 @@ build_precompiled_javacc:
 
 build_rs:
 	javac -cp . RS.java
+
+
+test_st:
+	javac -cp . Type.java
+	javac -cp . Symbol.java
+	javac -cp . -Xlint SymbolTable.java
+	javac -cp /usr/local/jar/junit4.9b2/junit-4.9b2.jar:. SymbolTableTest.java
+	java -cp /usr/local/jar/junit4.9b2/junit-4.9b2.jar:. org.junit.runner.JUnitCore SymbolTableTest | color-junit
+
