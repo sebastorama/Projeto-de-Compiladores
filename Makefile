@@ -49,3 +49,8 @@ test_st:
 	javac -cp /usr/local/jar/junit4.9b2/junit-4.9b2.jar:. SymbolTableTest.java
 	java -cp /usr/local/jar/junit4.9b2/junit-4.9b2.jar:. org.junit.runner.JUnitCore SymbolTableTest | color-junit
 
+compile_rs:
+	javac -cp . RS.java
+
+test:
+	java -cp . Pascal < teste.pas

@@ -4,12 +4,15 @@ options {
 
 PARSER_BEGIN(Pascal)
 import java.io.PrintStream; 
+
 class Pascal {
+	public RS rs = new RS();
 	static public void main(String[] args)
 	throws Exception {
 		Pascal parser = new Pascal( System.in );
 		parser.Start( System.out );
 	}
+
 }
 PARSER_END(Pascal)
 
@@ -61,7 +64,10 @@ void Start(PrintStream printStream):
 	programa()
 	<EOF>
 	{
-		System.out.println("Programa correto!");
+		if(rs.success())
+			System.out.println("Programa correto!");
+		else
+			rs.printErrors();
 	}
 }
 
@@ -92,13 +98,17 @@ void bloco(): {}
 
 
 /* 3.   <tipo> ::= <identificador>                                                          */
-void tipo(): {}
+void tipo(): { Token t = null;}
 {
-	<IDENTIFIER>
+	t = <IDENTIFIER> {
+		rs.process("9", t);
+	}
 }
 
 /* 4. <constante> ::= [+|-] (<identificador> | <numero_inteiro>)                            */
-void constante(): {}
+void constante(): {
+	Token t;
+}
 {
 	[
 		<PLUS>
@@ -106,9 +116,13 @@ void constante(): {}
 		<MINUS>
 	]
 	(
-		<IDENTIFIER>
+		t = <IDENTIFIER> {
+			rs.process("0''", t);
+		}
 		|
-		<NUMBER>
+		t = <NUMBER> {
+			rs.process("0'''", t);
+		}
 	)
 }
 
@@ -133,16 +147,24 @@ void declaracao_variaveis(): {}
 {
 	lista_identificadores()
 	<COLON>
-	tipo()
+	tipo() {
+		rs.process("4", null);
+	}
 }
 
 /* 7. <lista de identificadores> ::= <identificador> {, <identificador>}                    */
-void lista_identificadores(): {}
+void lista_identificadores(): {
+	Token t;
+}
 {
-	<IDENTIFIER>
+	t = <IDENTIFIER> {
+		rs.process("3", t);
+	}
 	(
 		<COMMA>
-		<IDENTIFIER>
+		t = <IDENTIFIER> {
+			rs.process("3", t);
+		}
 	)*
 }
 

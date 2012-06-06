@@ -1,4 +1,4 @@
-enum Type {
-	Integer,
-	Boolean
+class Type {
+	String id;
+	String level;
 }

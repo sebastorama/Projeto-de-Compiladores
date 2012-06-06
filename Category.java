@@ -1,6 +1,7 @@
 enum Category {
-	Variable,
-	Parameter,
-	Procedure,
-	Constant
+	variable,
+	type,
+	parameter,
+	procedure,
+	constant
 }
