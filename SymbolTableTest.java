@@ -51,6 +51,8 @@ public class SymbolTableTest {
 		s.id = "symbol4";
 		symbol_table.insert(s, false, 1);
 
+		symbol_table.print();
+
 		symbol_table.destroy(1);
 		assertTrue("symbol1 must be declared", symbol_table.declared("symbol1", 0));
 		assertFalse("symbol2 must not exist", symbol_table.declared("symbol2", 1));

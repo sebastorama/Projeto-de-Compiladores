@@ -3,6 +3,7 @@ import java.util.*;
 public class SymbolTable {
 	Symbol integerType;
 	Symbol booleanType;
+	Symbol currentProcedure;
 	ArrayList<Hashtable <String, Symbol>> tables;
 
 	ArrayList <Symbol> cachedSymbols;
@@ -131,6 +132,24 @@ public class SymbolTable {
 		Iterator <Symbol> s = cachedSymbols.iterator();
 		while(s.hasNext()) {
 			s.next().type= type;
+		}
+	}
+
+	public void print() {
+		Iterator <Hashtable <String, Symbol>> table = tables.iterator();
+		int current_level = 0;
+
+		while(table.hasNext()) {
+			Hashtable<String, Symbol> currentTable;
+			currentTable = table.next();
+			System.out.println("\n\nlevel: " + current_level);
+
+			Enumeration e = currentTable.keys();
+			while(e.hasMoreElements()) {
+				Symbol s = currentTable.get(e.nextElement());
+				s.print();
+			}
+			current_level++;
 		}
 	}
 }

@@ -6,7 +6,7 @@ var
 { Mantem uma lista com os 10 primeiros inteiros primos. Caso
   um valor invalido seja pedido (nao seja entre 1 e 10) 
   o programa retorna -1 }
-procedure primeiros_primos(i : integer; var res : integer);
+procedure primeiros_primos(i: integer; var res : integer);
 begin
 	case i of
 		true: res := 1;
@@ -24,8 +24,13 @@ begin
 	end
 end
 
+procedure primeiros_primos1(i : integer);
+begin
+	i := -1
+end
+
 
 begin
 	primeiros_primos(5, a);
-	write(a)
+	a := 32000
 end.

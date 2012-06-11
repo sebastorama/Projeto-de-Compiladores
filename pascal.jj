@@ -21,6 +21,7 @@ SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
 MORE : { < "{" > : IN_COMMENT }
 <IN_COMMENT> MORE : { < "}" > : DEFAULT | < ~[] > }
 TOKEN : { < PROGRAM       : "program" > }
+TOKEN : { < DEBUG_ST      : "$%DEBUG_ST" > }
 TOKEN : { < VAR           : "var" > }
 TOKEN : { < PROCEDURE     : "procedure" > }
 TOKEN : { < BEGIN         : "begin" > }
@@ -174,18 +175,26 @@ void lista_identificadores(): {
 void parte_declaracao_procedimento(): {}
 {
 		declaracao_procedimento()
+		(
+		  declaracao_procedimento()
+		)*
 }
 
 /* 9. <declaração de procedimento> ::=                                                      */
 /* procedure <identificador>                                                                */
 /* [<parâmetros formais>] ; <bloco>                                                         */
-void declaracao_procedimento(): {}
+void declaracao_procedimento(): {
+	Token t;
+}
 {
 	<PROCEDURE>
-	<IDENTIFIER>
+	t = <IDENTIFIER> {
+		rs.process("5", t);
+	}
 	[parametros_formais()]
 	<SEMICOLON>
 	bloco()
+	{ rs.process("8", null); }
 }
 
 /* 10. <parâmetros formais> ::=                                                             */
@@ -203,12 +212,16 @@ void parametros_formais(): {}
 
 /* 11. <seção de parâmetros formais> ::=                                                    */
 /* [var] <lista de identificadores> : <identificador>                                       */
-void secao_parametros_formais(): {}
+void secao_parametros_formais(): { Token t;}
 {
-	[<VAR>]
-	lista_identificadores()
+	{ rs.process("14", null); }
+	[<VAR>{ rs.process("15", null); }]
+	lista_identificadores2()
 	<COLON>
-	<IDENTIFIER>
+	t = <IDENTIFIER> {
+		rs.process("19", t);
+	}
+
 }
 
 /* 12. <comando composto> ::=  begin <comando> { ; <comando>} end                           */
@@ -240,12 +253,23 @@ void comando(): {}
 	comando_condicional_2()
 	|
 	comando_repetitivo_1()
+	|
+	debug_st()
+}
+
+void debug_st(): {}
+{
+	<DEBUG_ST> {
+		rs.printSymbolTable();
+	}
 }
 
 /* 14. <atribuição ou chamada de procedimento>::= <identificador> <escolhe proced ou atrib> */
-void atribuicao_ou_chamada_de_procedimento(): {}
+void atribuicao_ou_chamada_de_procedimento(): {Token t;}
 {
-	<IDENTIFIER>
+	t = <IDENTIFIER> {
+		rs.cachedToken = t;
+	}
 	escolhe_proced_ou_atrib()
 }
 
@@ -260,17 +284,22 @@ void escolhe_proced_ou_atrib(): {}
 /* 16. <chamada de procedimento> ::= [ ( <lista de expressões> ) ]                          */
 void chamada_procedimento(): {}
 {
+	{ rs.process("21", rs.cachedToken);
+		rs.process("25", rs.cachedToken);
+	}
 	[
 		<O_PAR>
 		lista_expressoes()
 		<C_PAR>
 	]
+	{ rs.process("24", rs.cachedToken); }
 }
 
 /* 17. <atribuição> ::= := <expressão>                                                      */
 void atribuicao(): {}
 {
 	<ASSIGN>
+	{ rs.process("25'", rs.cachedToken); }
 	expressao()
 }
 
@@ -404,11 +433,12 @@ void termo(): {}
 /* | <número>                                                                               */
 /* | ( <expressão> )                                                                        */
 /* | not <fator>                                                                            */
-void fator(): {}
+void fator(): {Token t;}
 {
 	variavel()
 	|
-	<NUMBER>
+	t = <NUMBER>
+	{ rs.process("26", t); }
 	|
 	<O_PAR> expressao() <C_PAR>
 	|
@@ -416,18 +446,38 @@ void fator(): {}
 }
 
 /* 27. <variável> ::= <identificador>                                                       */
-void variavel(): {}
+void variavel(): { Token t;}
 {
-	<IDENTIFIER>
+	t = <IDENTIFIER> {
+		rs.process("21", t);
+	}
 }
 
 /* 28. <lista de expressões> ::=  <expressão> {, <expressão>}                               */
 void lista_expressoes(): {}
 {
 	expressao()
+	{ rs.process("23", null); }
 	(
 		<COMMA>
 		expressao()
+		{ rs.process("23", null); }
 	)*
 }
 
+
+/* 29. <lista de identificadores2> ::= <identificador> {, <identificador>}                    */
+void lista_identificadores2(): {
+	Token t;
+}
+{
+	t = <IDENTIFIER> {
+		rs.process("18", t);
+	}
+	(
+		<COMMA>
+		t = <IDENTIFIER> {
+			rs.process("18", t);
+		}
+	)*
+}
