@@ -32,5 +32,7 @@ begin
 
 	primeiros_primos(2, 2);
 	a := b+1;
-	z := true+false
+	z := true+false;
+	read(a, b, z);
+	write(2, b, 4)
 end.
