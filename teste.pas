@@ -1,7 +1,7 @@
 program Teste3;
 var
-	a : integer;
-	b : boolean;
+	a, b, c : integer;
+	z : boolean;
 
 { Mantem uma lista com os 10 primeiros inteiros primos. Caso
   um valor invalido seja pedido (nao seja entre 1 e 10) 
@@ -24,17 +24,13 @@ begin
 	end
 end
 
-procedure primeiros_primos1(i : integer);
-begin
-	i := -1
-end
-
-
 begin
 	case a of
 		1: b := 3;
 		2: b := 4
 	end;
-	primeiros_primos(5, a);
-	a := 32000
+
+	primeiros_primos(2, a);
+	a := b+1;
+	z := true+false
 end.

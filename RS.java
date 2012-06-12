@@ -7,6 +7,8 @@ public class RS {
 	public int currentLevel = 0;
 	public Symbol c_type;
 	public Symbol cachedType;
+	public Symbol factorType;
+	public Symbol expressionType;
 	public int value;
 	public boolean cachedClassSet; // value: true, ref: false
 	public SymbolTable symbolTable;
@@ -16,8 +18,11 @@ public class RS {
 	public Hashtable<String, Object> caseConstants;
 	public String cachedConstant;
 	public int cachedConstantLine;
+	public Symbol cachedConstantType;
 
 	public RS() {
+		expressionType = null;
+		factorType = null;
 		symbolTable = new SymbolTable();
 		errors = new ArrayList<String>();
 		caseConstants = new Hashtable<String, Object>();
@@ -52,12 +57,14 @@ public class RS {
 			} else {
 				c_type = s.type;
 				value = s.value;
+				cachedConstantType = s.type;
 			}
 
 		} else if( n.equals("0'''") ) {
 
 			c_type = symbolTable.integerType;
 			value = Integer.parseInt(t.toString());
+			cachedConstantType = symbolTable.integerType;
 
 		} else if( n.equals("3") ) {
 			if(symbolTable.declared(t.toString(), currentLevel)) {
@@ -135,6 +142,12 @@ public class RS {
 						", linha: "+t.beginLine+", coluna: "+ t.beginColumn);
 			}
 		} else if (n.equals("23") ) {
+			if( cachedProcedure != null &&
+					cachedProcedure.parameters.get(cachedParameterCount) != expressionType) {
+				errors.add("Tipo incompatível do parâmetro número "+ cachedParameterCount+1 +
+						". Linha: "+t.beginLine+
+						".\n\tProcedimento chamado: " + t.toString());
+			}
 			cachedParameterCount++;
 		} else if (n.equals("24") ) {
 			Symbol s = symbolTable.search(t.toString(), currentLevel);
@@ -151,7 +164,9 @@ public class RS {
 			if(s != null && s.category != Category.procedure) {
 				errors.add("Identificador \""+t.toString()+"\" não é procedimento"+
 						", linha: "+t.beginLine+", coluna: "+ t.beginColumn);
+				cachedProcedure = null;
 			} else {
+				cachedProcedure = s;
 				cachedParameterCount = 0;
 			}
 		} else if (n.equals("25'") ) {
@@ -180,6 +195,10 @@ public class RS {
 						"\" já foi utilizada como elemento do case." +
 						" Linha: "+ cachedConstantLine);
 			} else {
+				if(cachedConstantType != expressionType) {
+					errors.add("Constante de tipo incompatível com o" +
+							" pedido pelo case. Linha: " + cachedConstantLine);
+				}
 				caseConstants.put(cachedConstant, 0);
 			}
 		} else if (n.equals("31")) {
@@ -196,6 +215,38 @@ public class RS {
 		}
 		cachedConstant = signal_str + value.toString();
 		cachedConstantLine = value.beginLine;
+	}
+
+	public void setCachedConstantTypeInteger() {
+
+	}
+
+	public void setCachedConstantTypeBoolean() {
+
+	}
+
+	public void typeCheckOnFactor(Token t) {
+		Symbol s = symbolTable.search(t.toString(), currentLevel);
+		if(factorType == null && s != null) {
+			factorType = s.type;
+		}
+		if(factorType != s.type) {
+			errors.add("Tipo incompatível, Linha: "+t.beginLine);
+		}
+	}
+
+	public void typeCheckOnNumericFactor(Token t) {
+		if(factorType == null) {
+			factorType = symbolTable.integerType;
+		}
+		if(factorType != symbolTable.integerType) {
+			errors.add("Tipo incompatível, Linha: "+t.beginLine);
+		}
+	}
+
+	public void setExpressionType() {
+		expressionType = factorType;
+		factorType = null;
 	}
 
 	public void printSymbolTable() {
