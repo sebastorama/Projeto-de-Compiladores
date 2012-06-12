@@ -143,15 +143,20 @@ public class RS {
 			}
 		} else if (n.equals("23") ) {
 			if( cachedProcedure != null &&
+					!cachedProcedure.id.equals("read") &&
+					!cachedProcedure.id.equals("write") &&
 					cachedProcedure.parameters.get(cachedParameterCount) != expressionType) {
-				errors.add("Tipo incompatível do parâmetro número "+ cachedParameterCount+1 +
+				errors.add("Tipo incompatível de parâmetro"+
 						". Linha: "+t.beginLine+
 						".\n\tProcedimento chamado: " + t.toString());
 			}
 			cachedParameterCount++;
 		} else if (n.equals("24") ) {
 			Symbol s = symbolTable.search(t.toString(), currentLevel);
-			if(s != null && s.category == Category.procedure) {
+			if(s != null && s.category == Category.procedure &&
+					!s.id.equals("read") &&
+					!s.id.equals("write")
+				) {
 				if(cachedParameterCount != s.nPar) {
 					errors.add("Número de parâmetros incompatível." +
 							"\nesperado: " + s.nPar +
@@ -207,13 +212,14 @@ public class RS {
 	}
 
 	public void cacheConstant(Token signal, Token value) {
-		String signal_str;
+		String signal_str = "";
+		String value_str = value.toString();
 		if(signal == null) {
-			signal_str = "+";
+			signal_str = "";
 		} else {
 			signal_str = signal.toString();
 		}
-		cachedConstant = signal_str + value.toString();
+		cachedConstant = signal_str + value_str;
 		cachedConstantLine = value.beginLine;
 	}
 
@@ -230,7 +236,7 @@ public class RS {
 		if(factorType == null && s != null) {
 			factorType = s.type;
 		}
-		if(factorType != s.type) {
+		if(s != null && factorType != s.type) {
 			errors.add("Tipo incompatível, Linha: "+t.beginLine);
 		}
 	}

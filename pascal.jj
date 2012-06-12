@@ -121,14 +121,15 @@ void constante(): {
 	(
 		t = <IDENTIFIER> {
 			rs.process("0''", t);
+			rs.cacheConstant(signal, t);
 		}
 		|
 		t = <NUMBER> {
 			rs.process("0'''", t);
+			rs.cacheConstant(signal, t);
 		}
 		{ value = t; }
 	)
-	{ rs.cacheConstant(signal, value); }
 }
 
 /* 5.  <parte de declarações de variáveis> ::=                                              */
@@ -257,15 +258,6 @@ void comando(): {}
 	comando_condicional_2()
 	|
 	comando_repetitivo_1()
-	|
-	debug_st()
-}
-
-void debug_st(): {}
-{
-	<DEBUG_ST> {
-		rs.printSymbolTable();
-	}
 }
 
 /* 14. <atribuição ou chamada de procedimento>::= <identificador> <escolhe proced ou atrib> */

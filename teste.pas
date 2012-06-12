@@ -30,7 +30,7 @@ begin
 		2: b := 4
 	end;
 
-	primeiros_primos(2, a);
+	primeiros_primos(2, 2);
 	a := b+1;
 	z := true+false
 end.
