@@ -145,6 +145,7 @@ public class RS {
 			if( cachedProcedure != null &&
 					!cachedProcedure.id.equals("read") &&
 					!cachedProcedure.id.equals("write") &&
+					cachedProcedure.parameters.size() > cachedParameterCount &&
 					cachedProcedure.parameters.get(cachedParameterCount) != expressionType) {
 				errors.add("Tipo incompatível de parâmetro"+
 						". Linha: "+t.beginLine+

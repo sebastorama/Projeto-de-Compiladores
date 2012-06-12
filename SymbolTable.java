@@ -101,8 +101,11 @@ public class SymbolTable {
 	}
 
 	public Symbol search(String id, int level) {
-		if(declared(id, level)) {
-			return findOrCreateTable(level).get(id);
+		int i;
+		for(i = level; i>=0; i--) { 
+			if(declared(id, i)) {
+				return findOrCreateTable(i).get(id);
+			}
 		}
 		return null;
 	}
