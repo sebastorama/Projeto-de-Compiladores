@@ -109,12 +109,14 @@ void tipo(): { Token t = null;}
 /* 4. <constante> ::= [+|-] (<identificador> | <numero_inteiro>)                            */
 void constante(): {
 	Token t;
+	Token signal = null;
+	Token value = null;
 }
 {
 	[
-		<PLUS>
+		signal = <PLUS>
 		|
-		<MINUS>
+		signal = <MINUS>
 	]
 	(
 		t = <IDENTIFIER> {
@@ -124,7 +126,9 @@ void constante(): {
 		t = <NUMBER> {
 			rs.process("0'''", t);
 		}
+		{ value = t; }
 	)
+	{ rs.cacheConstant(signal, value); }
 }
 
 /* 5.  <parte de declarações de variáveis> ::=                                              */
@@ -337,16 +341,19 @@ void comando_condicional_2(): {}
 		comando()
 	]
 	<END>
+	{ rs.process("31", null); }
 }
 
 /* 20. <elemento do case> ::= <constante>                                                   */
 /* {, constante>} : <comando>                                                               */
 void elemento_case(): {}
 {
-	constante()
+	constante() 
+	{ rs.process("30", null); }
 	(
 		<COMMA>
 		constante()
+		{ rs.process("30", null); }
 	)*
 	<COLON>
 	comando()

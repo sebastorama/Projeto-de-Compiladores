@@ -13,10 +13,14 @@ public class RS {
 	public Token cachedToken;
 	public Symbol cachedProcedure;
 	public int cachedParameterCount;
+	public Hashtable<String, Object> caseConstants;
+	public String cachedConstant;
+	public int cachedConstantLine;
 
 	public RS() {
 		symbolTable = new SymbolTable();
 		errors = new ArrayList<String>();
+		caseConstants = new Hashtable<String, Object>();
 		currentLevel = 0;
 	}
 
@@ -169,7 +173,28 @@ public class RS {
 						"\"" +
 						", linha: "+t.beginLine+", coluna: "+ t.beginColumn);
 			}
+		} else if (n.equals("30")) {
+			if(caseConstants.containsKey(cachedConstant)) {
+				errors.add("Constante \""+ cachedConstant +
+						"\" já foi utilizada como elemento do case." +
+						" Linha: "+ cachedConstantLine);
+			} else {
+				caseConstants.put(cachedConstant, 0);
+			}
+		} else if (n.equals("31")) {
+			caseConstants.clear();
 		}
+	}
+
+	public void cacheConstant(Token signal, Token value) {
+		String signal_str;
+		if(signal == null) {
+			signal_str = "+";
+		} else {
+			signal_str = signal.toString();
+		}
+		cachedConstant = signal_str + value.toString();
+		cachedConstantLine = value.beginLine;
 	}
 
 	public void printSymbolTable() {

@@ -9,8 +9,8 @@ var
 procedure primeiros_primos(i: integer; var res : integer);
 begin
 	case i of
-		true: res := 1;
-		false: res := 2;
+		1: res := 1;
+		2: res := 2;
 		3: res := 3;
 		4: res := 5;
 		5: res := 7;
@@ -31,6 +31,10 @@ end
 
 
 begin
+	case a of
+		1: b := 3;
+		1: b := 4
+	end;
 	primeiros_primos(5, a);
 	a := 32000
 end.
