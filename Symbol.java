@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class Symbol {
 	public String id;
@@ -9,7 +9,11 @@ public class Symbol {
 	public int nBytes = 0;
 	public int value = 0;
 	public int nPar = 0;
-	public ArrayList parameters;
+	public ArrayList<Symbol> parameters;
+
+	public Symbol() {
+		parameters = new ArrayList<Symbol>();
+	}
 
 	public String classSetToS() {
 		if(classSet)
@@ -36,11 +40,25 @@ public class Symbol {
 		return "";
 	}
 
+	public String parametersToS() {
+		Iterator <Symbol> parameter = parameters.iterator();
+		String result = "";
+		while(parameter.hasNext()) {
+			result += parameter.next().id + " ";
+		}
+		return result;
+	}
+
 	public void print() {
-		System.out.println(id +
+		String result = "";
+		result += id +
 				", classSet: " + classSetToS() +
 				", type: " + typeToS() +
-				", category: " + categoryToS()
-				);
+				", category: " + categoryToS();
+		if(category == Category.procedure) {
+			result += "\n\tparameters: " + parametersToS();
+		}
+
+		System.out.println(result);
 	}
 }

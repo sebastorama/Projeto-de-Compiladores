@@ -126,6 +126,7 @@ public class RS {
 		} else if ( n.equals("19") ) {
 			this.process("9", t);
 			symbolTable.setTypeOnCached(cachedType);
+			symbolTable.addParametersOnCachedProcedure();
 			symbolTable.flushCached();
 		} else if (n.equals("21") ) {
 			Symbol s = symbolTable.search(t.toString(), currentLevel);
@@ -167,7 +168,7 @@ public class RS {
 			}
 		} else if (n.equals("26")) {
 			int i = Integer.parseInt(t.toString());
-			if(i>32000 || i<-32000) {
+			if(i>32767 || i<-32768) {
 				errors.add("Valor fora dos limites permitidos \""+
 						t.toString() +
 						"\"" +

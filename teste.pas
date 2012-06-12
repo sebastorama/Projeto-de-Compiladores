@@ -33,7 +33,7 @@ end
 begin
 	case a of
 		1: b := 3;
-		1: b := 4
+		2: b := 4
 	end;
 	primeiros_primos(5, a);
 	a := 32000

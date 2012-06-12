@@ -134,6 +134,13 @@ public class SymbolTable {
 			s.next().type= type;
 		}
 	}
+	
+	public void addParametersOnCachedProcedure() {
+		Iterator <Symbol> s = cachedSymbols.iterator();
+		while(s.hasNext()) {
+			currentProcedure.parameters.add(s.next().type);
+		}
+	}
 
 	public void print() {
 		Iterator <Hashtable <String, Symbol>> table = tables.iterator();
