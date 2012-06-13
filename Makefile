@@ -1,4 +1,4 @@
-all: precompile_javacc apply_patches build_precompiled_javacc
+all: compile_st compile_rs precompile_javacc apply_patches build_precompiled_javacc
 
 correct_1:
 	java -cp . Pascal < examples/correct/correct_1.pas
@@ -9,6 +9,16 @@ correct_3:
 correct_4:
 	java -cp . Pascal < examples/correct/correct_4.pas
 correct_all: correct_1 correct_2 correct_3 correct_4
+
+semantic_error_1:
+	- java -cp . Pascal < examples/semantic_errors/semantic_error_1.pas
+semantic_error_2:
+	- java -cp . Pascal < examples/semantic_errors/semantic_error_2.pas
+semantic_error_3:
+	- java -cp . Pascal < examples/semantic_errors/semantic_error_3.pas
+semantic_error_4:
+	- java -cp . Pascal < examples/semantic_errors/semantic_error_4.pas
+semantic_error_all: semantic_error_1 semantic_error_2 semantic_error_3 semantic_error_4
 
 sintatical_error_1:
 	- java -cp . Pascal < examples/sintatical_errors/sintatical_error_1.pas
@@ -24,7 +34,7 @@ lexical_error_1:
 lexical_error_2:
 	- java -cp . Pascal < examples/lexical_errors/lexical_error_2.pas
 
-all_tests: correct_all sintatical_error_all lexical_error_1
+all_tests: correct_all semantic_error_all sintatical_error_all lexical_error_1
 
 clean:
 	rm *.java && rm *.class
@@ -49,6 +59,10 @@ test_st:
 	javac -cp /usr/local/jar/junit4.9b2/junit-4.9b2.jar:. SymbolTableTest.java
 	java -cp /usr/local/jar/junit4.9b2/junit-4.9b2.jar:. org.junit.runner.JUnitCore SymbolTableTest | color-junit
 
+compile_st:
+	javac -cp . Type.java
+	javac -cp . Symbol.java
+	javac -cp . -Xlint SymbolTable.java
 compile_rs:
 	javac -cp . RS.java
 

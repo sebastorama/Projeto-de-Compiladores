@@ -1,8 +1,9 @@
 program Teste2;
+	var res: integer;
+
 procedure fatorial(i : integer; var res : integer);
 var
 	aux :integer;
-	res: integer;
 begin
 	aux := 1;
 	while i > 0 do

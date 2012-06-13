@@ -1,0 +1,11 @@
+1 identificador (de todas as categorias) já declarado
+2 tipo não definido
+3 identificador não declarado
+4 incompatibilidade no número de parâmetros
+- erro semantico relativo ao case:
+	5 - constante repetida (elementos diferentes do case)
+	6 - constante repetida (mesmo elemento do case)
+
+Erros de tipo:
+7 - Tipos incompatíveis sendo operados com +/- etc 
+8 - Tipos incompatíveis sendo passados como parametro
