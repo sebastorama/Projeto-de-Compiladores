@@ -1,4 +1,4 @@
-all: compile_st compile_rs precompile_javacc apply_patches build_precompiled_javacc
+all: precompile_javacc compile_st compile_rs apply_patches build_precompiled_javacc
 
 correct_1:
 	java -cp . Pascal < examples/correct/correct_1.pas
