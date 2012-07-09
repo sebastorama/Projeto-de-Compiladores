@@ -11,6 +11,7 @@ public class Symbol {
 	public int nPar = 0;
 	public int offsetAddress = 0;
 	public int parameterIndex = 0;
+	public int label = 0;
 	public ArrayList<Symbol> parameters;
 
 	public Symbol() {

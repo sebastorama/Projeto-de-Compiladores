@@ -271,6 +271,10 @@ public class RS {
 		symbolTable.setOffsetAddressOnParameters(cachedProcedure);
 	}
 
+	public void setCachedProcedureLabel(int label) {
+		cachedProcedure.label = label;
+	}
+
 	public void printSymbolTable() {
 		symbolTable.print();
 	}

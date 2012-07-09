@@ -13,7 +13,7 @@ class Pascal {
 		Pascal parser = new Pascal( System.in );
 		parser.Start( System.out );
 	}
-
+	public boolean classSet = true;
 }
 PARSER_END(Pascal)
 
@@ -108,6 +108,9 @@ void bloco(): {}
 		}
 	}
 	comando_composto()
+	{
+		cw.generateDeallocInstruction();
+	}
 }
 
 
@@ -215,9 +218,17 @@ void declaracao_procedimento(): {
 	}
 	[parametros_formais()]
 	<SEMICOLON>
-	{ rs.setOffsetAddressOnParameters();}
+	{ 
+		rs.setOffsetAddressOnParameters();
+		rs.setCachedProcedureLabel(cw.label_counter);
+		cw.generateProcedureEntryInstruction(rs.currentLevel);
+	}
 	bloco()
-	{ rs.process("8", null); }
+	{ 
+		rs.process("8", null);
+		Symbol s = rs.getSymbolFromToken(t);
+		cw.generateProcedureReturnInstruction(s);
+	}
 }
 
 /* 10. <parâmetros formais> ::=                                                             */
@@ -306,40 +317,56 @@ void chamada_procedimento(): {}
 		lista_expressoes()
 		<C_PAR>
 	]
-	{ rs.process("24", rs.cachedToken); }
+	{ 
+		rs.process("24", rs.cachedToken);
+		if(rs.cachedProcedure.id != "read" && rs.cachedProcedure.id != "write")
+			cw.generateProcedureCallInstruction(rs.cachedProcedure);
+	}
 }
 
 /* 17. <atribuição> ::= := <expressão>                                                      */
 void atribuicao(): {}
 {
 	<ASSIGN>
-	{ rs.process("25'", rs.cachedToken); }
+	{ 
+		rs.process("25'", rs.cachedToken);
+		Symbol s =rs.getSymbolFromToken(rs.cachedToken);
+
+	}
 	expressao()
-	{ rs.setExpressionType(); }
+	{
+		rs.setExpressionType();
+		cw.generateStoreInstruction(s);
+	}
 }
 
 /* 18. <comando condicional 1> ::=                                                          */
 /* if <expressão> then <comando>                                                            */
 /* [else <comando>]                                                                         */
 void comando_condicional_1(): {
-	int label;
+	int falseLabel;
+	int afterElseLabel;
 }
 {
 	<IF>
 	expressao()
 	{
 		rs.setExpressionType();
-		label = cw.branchIfFalse();
+		falseLabel = cw.branchIfFalse();
 	}
 	<THEN>
 	comando()
 	[
 		LOOKAHEAD(2)
+		{ afterElseLabel = cw.branch(); }
 		<ELSE>
 		{ 
-			cw.putInstruction("L"+ label + " NADA");
+			cw.putInstruction("L"+ falseLabel + " NADA");
 		}
 		comando()
+		{ 
+			cw.putInstruction("L"+ afterElseLabel + " NADA");
+		}
 	]
 }
 
@@ -402,35 +429,42 @@ void comando_repetitivo_1(): {
 }
 
 /* 22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]                  */
-void expressao(): {}
+void expressao(): {
+	Relation r;
+}
 {
 	expressao_simples()
 	[
-		relacao()
+		r = relacao()
 		expressao_simples()
+		{ 
+			cw.generateRelationInstruction(r);
+		}
 	]
 }
 
 /* 23. <relação> ::=   = | <> | < | <= | >= | >                                             */
-void relacao(): {}
+Relation relacao(): {}
 {
-	<EQUAL>
+	<EQUAL> { return Relation.equal; }
 	|
-	<DIFFERENT>
+	<DIFFERENT> { return Relation.different; }
 	|
-	<LESS>
+	<LESS> { return Relation.less; }
 	|
-	<LESS_EQUAL>
+	<LESS_EQUAL> { return Relation.lessEqual; }
 	|
-	<GREATER_EQUAL>
+	<GREATER_EQUAL> { return Relation.greaterEqual; }
 	|
-	<GREATER>
+	<GREATER> { return Relation.greater; }
 }
 
 
 /* 24. <expressão simples> ::=                                                              */
 /* [+ | -] <termo> {(+ | - | or) <termo>}                                                   */
-void expressao_simples(): {}
+void expressao_simples(): {
+	String instruction = "";
+}
 {
 	[
 		<PLUS>
@@ -440,30 +474,34 @@ void expressao_simples(): {}
 	termo()
 	(
 		(
-			<PLUS>
+			<PLUS> { instruction = "SOMA";}
 			|
-			<MINUS>
+			<MINUS> { instruction = "SUBT";}
 			|
-			<OR>
+			<OR> { instruction = "DISJ";}
 		)
 		termo()
+		{ cw.putInstruction(instruction); }
 	)*
 }
 
 /* 25. <termo> ::=                                                                          */
 /* <fator> {(* | div | and ) <fator> }                                                      */
-void termo(): {}
+void termo(): {
+	String instruction = "";
+}
 {
 	fator()
 	(
 		(
-			<TIMES> 
+			<TIMES> { instruction = "MULT"; }
 			|
-			<DIV> 
+			<DIV>  { instruction = "DIVI"; }
 			|
-			<AND>
+			<AND> { instruction = "CONJ"; }
 		)
 		fator()
+		{ cw.putInstruction(instruction); }
 	)*
 }
 
@@ -480,6 +518,7 @@ void fator(): {Token t;}
 	{ 
 		rs.process("26", t);
 		rs.typeCheckOnNumericFactor(t);
+		cw.generateLoadConstant(Integer.parseInt(t.toString()));
 	}
 	|
 	<O_PAR> expressao() <C_PAR>
@@ -495,26 +534,47 @@ void variavel(): { Token t;}
 		rs.process("21", t);
 		rs.typeCheckOnFactor(t);
 		Symbol s = rs.getSymbolFromToken(t);
-		cw.generateLoadInstruction(s);
+		cw.generateLoadInstruction(s, classSet);
 	}
 }
 
 /* 28. <lista de expressões> ::=  <expressão> {, <expressão>}                               */
-void lista_expressoes(): {}
+void lista_expressoes(): {
+	Symbol procedure = rs.cachedProcedure;
+}
 {
+	{ 
+		if(procedure.id != "write" && procedure.id != "read") {
+			classSet =
+				rs.cachedProcedure.parameters.get(0).classSet;
+		}
+	}
 	expressao()
 	{ 
 		rs.setExpressionType();
 		rs.process("23", rs.cachedToken);
+		if(procedure.id == "write") {
+			cw.putInstruction("IMPR");
+		}
 	}
 	(
 		<COMMA>
+		{
+			if(procedure.id != "write" && procedure.id != "read") {
+				classSet =
+					rs.cachedProcedure.parameters.get(rs.cachedParameterCount).classSet;	
+			}
+		}
 		expressao()
 		{ 
 			rs.setExpressionType();
 			rs.process("23", rs.cachedToken);
+			if(procedure.id == "write") {
+				cw.putInstruction("IMPR");
 			}
+		}
 	)*
+	{ classSet = true; }
 }
 
 

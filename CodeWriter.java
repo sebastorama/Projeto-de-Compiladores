@@ -50,15 +50,74 @@ public class CodeWriter {
 		this.output.add(s);
 	}
 
-	public void generateLoadInstruction(Symbol s) {
+	public void generateLoadInstruction(Symbol s, boolean classSet) {
+		if(classSet) {
+			if(s.category == Category.variable) {
+				this.putInstruction("CRVL "+s.level+","+s.offsetAddress);
+			} else if(s.category == Category.parameter) {
+				if(s.classSet) // value
+					this.putInstruction("CRVL "+s.level+","+ s.offsetAddress);
+				else // reference
+					this.putInstruction("CRVI "+s.level+","+ s.offsetAddress);
+			}
+		} else {
+			if(s.classSet)
+				this.putInstruction("CREN "+s.level+","+s.offsetAddress);
+			else
+				this.putInstruction("CRVL "+s.level+","+ s.offsetAddress);
+		}
+	}
+
+	public void generateLoadConstant(int i) {
+		this.putInstruction("CRCT " + i );
+	}
+
+	public void generateStoreInstruction(Symbol s) {
 		if(s.category == Category.variable) {
-			this.putInstruction("CRVL "+s.level+" "+s.offsetAddress);
+			this.putInstruction("ARMZ "+s.level+","+s.offsetAddress);
 		} else if(s.category == Category.parameter) {
 			if(s.classSet) // value
-				this.putInstruction("CRVL "+s.level+" "+ s.offsetAddress);
+				this.putInstruction("ARMZ "+s.level+","+ s.offsetAddress);
 			else // reference
-				this.putInstruction("CRVI "+s.level+" "+ s.offsetAddress);
+				this.putInstruction("ARMI "+s.level+","+ s.offsetAddress);
 		}
+	}
+
+
+	public void generateProcedureEntryInstruction(int level) {
+		this.putInstruction("L"+ this.label_counter + " ENPR " + level);
+		this.label_counter++;
+	}
+
+	public void generateRelationInstruction(Relation r) {
+		switch(r) {
+			case equal: this.putInstruction("CMIG");
+								 break;
+			case different: this.putInstruction("CMDG");
+								 break;
+			case less: this.putInstruction("CMME");
+								 break;
+			case lessEqual: this.putInstruction("CMEG");
+								 break;
+			case greaterEqual: this.putInstruction("CMAG");
+								 break;
+			case greater: this.putInstruction("CMMA");
+								 break;
+		}
+	}
+
+	public void generateProcedureCallInstruction(Symbol s) {
+		this.putInstruction("CHPR L"+s.label);
+	}
+
+	public void generateDeallocInstruction() {
+		if(this.stack_pointer_offset.peekFirst() > 0) {
+			this.putInstruction("DMEN " + this.stack_pointer_offset.pop());
+		}
+	}
+
+	public void generateProcedureReturnInstruction(Symbol s) {
+		this.putInstruction("RTPR "+(s.level+1)+","+s.parameters.size());
 	}
 
 	public void printCode() {

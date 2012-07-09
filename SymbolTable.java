@@ -150,7 +150,6 @@ public class SymbolTable {
 		while(s.hasNext()) {
 			Symbol currentSymbol = s.next();
 			currentSymbol.offsetAddress = currentSymbol.parameterIndex-(procedure.nPar+2);
-			System.out.println(currentSymbol.parameterIndex);
 		}
 	}
 
