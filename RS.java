@@ -194,8 +194,15 @@ public class RS {
 						", linha: "+t.beginLine+", coluna: "+ t.beginColumn);
 			}
 		} else if (n.equals("26")) {
-			int i = Integer.parseInt(t.toString());
-			if(i>32767 || i<-32768) {
+			try {
+				int i = Integer.parseInt(t.toString());
+				if(i>32767 || i<-32768) {
+					errors.add("Valor fora dos limites permitidos \""+
+							t.toString() +
+							"\"" +
+							", linha: "+t.beginLine+", coluna: "+ t.beginColumn);
+				}
+			} catch(NumberFormatException e) {
 				errors.add("Valor fora dos limites permitidos \""+
 						t.toString() +
 						"\"" +
