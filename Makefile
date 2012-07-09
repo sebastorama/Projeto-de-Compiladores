@@ -70,4 +70,4 @@ compile_cw:
 	javac -cp . CodeWriter.java
 
 test:
-	java -cp . Pascal < teste.pas > output.ass && diff teste.ass output.ass
+	java -cp . Pascal < teste.pas

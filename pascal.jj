@@ -229,6 +229,7 @@ void declaracao_procedimento(): {
 		Symbol s = rs.getSymbolFromToken(t);
 		cw.generateProcedureReturnInstruction(s);
 	}
+	<SEMICOLON>
 }
 
 /* 10. <parâmetros formais> ::=                                                             */
