@@ -29,6 +29,12 @@ public class RS {
 		currentLevel = 0;
 	}
 
+	public int getAddressFromToken(Token t) {
+		Symbol s = symbolTable.search(t.toString(), currentLevel);
+		if(s != null) return s.address;
+		else return -1;
+	}
+
 	public boolean success() {
 		if(errors.size() == 0)
 			return true;

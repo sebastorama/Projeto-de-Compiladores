@@ -80,12 +80,12 @@ void Start(PrintStream printStream):
 void programa(): {}
 {
   <PROGRAM>
-  { cw.putInstruction("INPP"); }
+  { cw.putInstruction("INPP");}
   <IDENTIFIER>
   <SEMICOLON>
   bloco()
   <PERIOD>
-  { cw.putInstruction("ENDP"); }
+  { cw.putInstruction("PARA"); }
 }
 
 
@@ -96,7 +96,17 @@ void programa(): {}
 void bloco(): {}
 {
 	[parte_declaracao_variaveis()]
+	{ 
+		if(rs.currentLevel==0) { 
+		  cw.branch();
+		}
+	}
 	[parte_declaracao_procedimento()]
+	{ 
+		if(rs.currentLevel == 0) {
+			cw.putInstruction("L1 NADA");
+		}
+	}
 	comando_composto()
 }
 
@@ -158,6 +168,7 @@ void declaracao_variaveis(): {}
 	<COLON>
 	tipo() {
 		rs.process("4", null);
+		cw.generateAmenInstruction();
 	}
 }
 
@@ -174,7 +185,7 @@ void lista_identificadores(): {
 	(
 		<COMMA>
 		t = <IDENTIFIER> {
-			cw.increaseAmenAcc();
+			address = cw.increaseAmenAcc();
 			rs.process("3", t, address);
 		}
 	)*
@@ -309,16 +320,24 @@ void atribuicao(): {}
 /* 18. <comando condicional 1> ::=                                                          */
 /* if <expressão> then <comando>                                                            */
 /* [else <comando>]                                                                         */
-void comando_condicional_1(): {}
+void comando_condicional_1(): {
+	int label;
+}
 {
 	<IF>
 	expressao()
-	{ rs.setExpressionType(); }
+	{
+		rs.setExpressionType();
+		label = cw.branchIfFalse();
+	}
 	<THEN>
 	comando()
 	[
 		LOOKAHEAD(2)
 		<ELSE>
+		{ 
+			cw.putInstruction("L"+ label + " NADA");
+		}
 		comando()
 	]
 }
@@ -362,13 +381,23 @@ void elemento_case(): {}
 
 /* 21. <comando repetitivo 1> ::=                                                           */
 /* while <expressão> do <comando>                                                           */
-void comando_repetitivo_1(): {}
+void comando_repetitivo_1(): {
+	int label;
+}
 {
 	<WHILE>
+	{ cw.markLabel(); }
 	expressao()
-	{ rs.setExpressionType(); }
+	{ 
+		rs.setExpressionType();
+		label = cw.branchIfFalse();
+	}
 	<DO>
+	{
+		
+	}
 	comando()
+	{ cw.putInstruction("L"+label+" NADA"); }
 }
 
 /* 22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]                  */
@@ -427,9 +456,9 @@ void termo(): {}
 	fator()
 	(
 		(
-			<TIMES>
+			<TIMES> 
 			|
-			<DIV>
+			<DIV> 
 			|
 			<AND>
 		)
@@ -447,7 +476,8 @@ void fator(): {Token t;}
 	variavel()
 	|
 	t = <NUMBER>
-	{ rs.process("26", t);
+	{ 
+		rs.process("26", t);
 		rs.typeCheckOnNumericFactor(t);
 	}
 	|
@@ -460,8 +490,10 @@ void fator(): {Token t;}
 void variavel(): { Token t;}
 {
 	t = <IDENTIFIER> {
+
 		rs.process("21", t);
 		rs.typeCheckOnFactor(t);
+		cw.putInstruction("CRVL " + rs.getAddressFromToken(t));
 	}
 }
 

@@ -9,7 +9,7 @@ public class CodeWriter {
 
 	public CodeWriter() {
 		this.amen_acc = 0;
-		this.label_counter = 0;
+		this.label_counter = 1;
 		this.stack_pointer = 0;
 		this.output =  new ArrayList<String>();
 	}
@@ -18,9 +18,30 @@ public class CodeWriter {
 		output.add(s);
 	}
 
+	public int branchIfFalse() {
+		this.putInstruction("DSVF L"+label_counter);
+		return label_counter++;
+	}
+
+	public int branch() {
+		this.putInstruction("DSVS L"+label_counter);
+		return label_counter++;
+	}
+
+	public void markLabel() {
+		this.putInstruction("L"+label_counter+" NADA");
+	}
+
 	public int increaseAmenAcc() {
 		this.amen_acc++;
 		return (stack_pointer + amen_acc - 1);
+	}
+
+	public void generateAmenInstruction() {
+		String s = "AMEN " + amen_acc;
+		this.stack_pointer += amen_acc;
+		this.amen_acc = 0;
+		this.output.add(s);
 	}
 
 	public void printCode() {
