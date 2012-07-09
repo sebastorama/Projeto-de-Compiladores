@@ -175,18 +175,18 @@ void declaracao_variaveis(): {}
 /* 7. <lista de identificadores> ::= <identificador> {, <identificador>}                    */
 void lista_identificadores(): {
 	Token t;
-	int address;
+	int offsetAddress;
 }
 {
 	t = <IDENTIFIER> {
-		address = cw.increaseAmenAcc();
-		rs.process("3", t, address);
+		offsetAddress = cw.increaseAmenAcc(rs.currentLevel);
+		rs.process("3", t, offsetAddress);
 	}
 	(
 		<COMMA>
 		t = <IDENTIFIER> {
-			address = cw.increaseAmenAcc();
-			rs.process("3", t, address);
+			offsetAddress = cw.increaseAmenAcc(rs.currentLevel);
+			rs.process("3", t, offsetAddress);
 		}
 	)*
 }
@@ -215,6 +215,7 @@ void declaracao_procedimento(): {
 	}
 	[parametros_formais()]
 	<SEMICOLON>
+	{ rs.setOffsetAddressOnParameters();}
 	bloco()
 	{ rs.process("8", null); }
 }
@@ -493,7 +494,8 @@ void variavel(): { Token t;}
 
 		rs.process("21", t);
 		rs.typeCheckOnFactor(t);
-		cw.putInstruction("CRVL " + rs.getAddressFromToken(t));
+		Symbol s = rs.getSymbolFromToken(t);
+		cw.generateLoadInstruction(s);
 	}
 }
 

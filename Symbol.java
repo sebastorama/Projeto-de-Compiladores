@@ -9,7 +9,8 @@ public class Symbol {
 	public int nBytes = 0;
 	public int value = 0;
 	public int nPar = 0;
-	public int address = 0;
+	public int offsetAddress = 0;
+	public int parameterIndex = 0;
 	public ArrayList<Symbol> parameters;
 
 	public Symbol() {

@@ -141,7 +141,16 @@ public class SymbolTable {
 	public void addParametersOnCachedProcedure() {
 		Iterator <Symbol> s = cachedSymbols.iterator();
 		while(s.hasNext()) {
-			currentProcedure.parameters.add(s.next().type);
+			currentProcedure.parameters.add(s.next());
+		}
+	}
+
+	public void setOffsetAddressOnParameters(Symbol procedure) {
+		Iterator <Symbol> s = procedure.parameters.iterator();
+		while(s.hasNext()) {
+			Symbol currentSymbol = s.next();
+			currentSymbol.offsetAddress = currentSymbol.parameterIndex-(procedure.nPar+2);
+			System.out.println(currentSymbol.parameterIndex);
 		}
 	}
 

@@ -29,12 +29,6 @@ public class RS {
 		currentLevel = 0;
 	}
 
-	public int getAddressFromToken(Token t) {
-		Symbol s = symbolTable.search(t.toString(), currentLevel);
-		if(s != null) return s.address;
-		else return -1;
-	}
-
 	public boolean success() {
 		if(errors.size() == 0)
 			return true;
@@ -53,7 +47,7 @@ public class RS {
 		this.process(n, t, -1);
 	}
 
-	public void process(String n, Token t, int address) {
+	public void process(String n, Token t, int offsetAddress) {
 		if( n.equals("0") ) {
 
 		} else if( n.equals("0'") ) {
@@ -85,7 +79,7 @@ public class RS {
 				Symbol s = new Symbol();
 				s.id = t.toString(); 
 				s.level = currentLevel;
-				s.address = address;
+				s.offsetAddress = offsetAddress;
 				symbolTable.insert(s, false, currentLevel); 
 			}
 		} else if( n.equals("4") ) {
@@ -138,6 +132,7 @@ public class RS {
 				s.level = currentLevel;
 				s.category = Category.parameter;
 				s.classSet = cachedClassSet;
+				s.parameterIndex = cachedProcedure.nPar;
 				symbolTable.insert(s, false, currentLevel);
 			}
 			cachedProcedure.nPar++;
@@ -157,7 +152,7 @@ public class RS {
 					!cachedProcedure.id.equals("read") &&
 					!cachedProcedure.id.equals("write") &&
 					cachedProcedure.parameters.size() > cachedParameterCount &&
-					cachedProcedure.parameters.get(cachedParameterCount) != expressionType) {
+					cachedProcedure.parameters.get(cachedParameterCount).type != expressionType) {
 				errors.add("Tipo incompatível de parâmetro"+
 						". Linha: "+t.beginLine+
 						".\n\tProcedimento chamado: " + t.toString());
@@ -265,6 +260,15 @@ public class RS {
 	public void setExpressionType() {
 		expressionType = factorType;
 		factorType = null;
+	}
+
+	public Symbol getSymbolFromToken(Token t) {
+		Symbol s = symbolTable.search(t.toString(), currentLevel);
+		return s;
+	}
+
+	public void setOffsetAddressOnParameters() {
+		symbolTable.setOffsetAddressOnParameters(cachedProcedure);
 	}
 
 	public void printSymbolTable() {
