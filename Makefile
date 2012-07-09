@@ -1,4 +1,4 @@
-all: precompile_javacc compile_st compile_rs apply_patches build_precompiled_javacc
+all: precompile_javacc compile_st compile_rs compile_cw apply_patches build_precompiled_javacc
 
 correct_1:
 	java -cp . Pascal < examples/correct/correct_1.pas
@@ -65,6 +65,9 @@ compile_st:
 	javac -cp . -Xlint SymbolTable.java
 compile_rs:
 	javac -cp . RS.java
+
+compile_cw:
+	javac -cp . CodeWriter.java
 
 test:
 	java -cp . Pascal < teste.pas

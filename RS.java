@@ -44,6 +44,10 @@ public class RS {
 	}
 
 	public void process(String n, Token t) {
+		this.process(n, t, -1);
+	}
+
+	public void process(String n, Token t, int address) {
 		if( n.equals("0") ) {
 
 		} else if( n.equals("0'") ) {
@@ -75,6 +79,7 @@ public class RS {
 				Symbol s = new Symbol();
 				s.id = t.toString(); 
 				s.level = currentLevel;
+				s.address = address;
 				symbolTable.insert(s, false, currentLevel); 
 			}
 		} else if( n.equals("4") ) {

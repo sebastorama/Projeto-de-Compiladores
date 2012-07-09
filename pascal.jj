@@ -7,6 +7,7 @@ import java.io.PrintStream;
 
 class Pascal {
 	public RS rs = new RS();
+	public CodeWriter cw = new CodeWriter();
 	static public void main(String[] args)
 	throws Exception {
 		Pascal parser = new Pascal( System.in );
@@ -66,7 +67,7 @@ void Start(PrintStream printStream):
 	<EOF>
 	{
 		if(rs.success())
-			System.out.println("Programa correto!");
+			cw.printCode();
 		else
 			rs.printErrors();
 	}
@@ -79,10 +80,12 @@ void Start(PrintStream printStream):
 void programa(): {}
 {
   <PROGRAM>
+  { cw.putInstruction("INPP"); }
   <IDENTIFIER>
   <SEMICOLON>
   bloco()
   <PERIOD>
+  { cw.putInstruction("ENDP"); }
 }
 
 
@@ -161,15 +164,18 @@ void declaracao_variaveis(): {}
 /* 7. <lista de identificadores> ::= <identificador> {, <identificador>}                    */
 void lista_identificadores(): {
 	Token t;
+	int address;
 }
 {
 	t = <IDENTIFIER> {
-		rs.process("3", t);
+		address = cw.increaseAmenAcc();
+		rs.process("3", t, address);
 	}
 	(
 		<COMMA>
 		t = <IDENTIFIER> {
-			rs.process("3", t);
+			cw.increaseAmenAcc();
+			rs.process("3", t, address);
 		}
 	)*
 }
