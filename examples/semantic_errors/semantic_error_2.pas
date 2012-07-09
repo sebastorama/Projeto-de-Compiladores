@@ -10,7 +10,7 @@ begin
 	else
 		res := false
 	end
-end
+end;
 
 begin
 	a := b; { 3 Identificador b nao declarado }

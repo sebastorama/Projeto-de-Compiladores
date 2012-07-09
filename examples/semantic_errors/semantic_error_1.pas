@@ -12,7 +12,7 @@ begin
 	else
 		res := false
 	end
-end
+end;
 
 begin
 	checa_primo(17, a);

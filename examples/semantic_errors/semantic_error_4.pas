@@ -22,7 +22,7 @@ begin
 	else
 		res := -1
 	end
-end
+end;
 
 
 begin

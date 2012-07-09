@@ -22,7 +22,7 @@ begin
 	else
 		res := -1
 	end
-end
+end;
 
 { checa se um numero passado como parametro eh primo. Resultados vao
   pela variavel "res" passada como referencia }
@@ -34,7 +34,7 @@ begin
 	else
 		res := false
 	end
-end
+end;
 
 begin
 	primeiros_primos(5, a);

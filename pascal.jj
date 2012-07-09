@@ -80,12 +80,14 @@ void Start(PrintStream printStream):
 void programa(): {}
 {
   <PROGRAM>
-  { cw.putInstruction("INPP");}
+  { 
+  	if(!rs.hasErrors()) cw.putInstruction("INPP");
+	}
   <IDENTIFIER>
   <SEMICOLON>
   bloco()
   <PERIOD>
-  { cw.putInstruction("PARA"); }
+  { if(!rs.hasErrors()) cw.putInstruction("PARA"); }
 }
 
 
@@ -98,18 +100,18 @@ void bloco(): {}
 	[parte_declaracao_variaveis()]
 	{ 
 		if(rs.currentLevel==0) { 
-		  cw.branch();
+		  if(!rs.hasErrors()) cw.branch();
 		}
 	}
 	[parte_declaracao_procedimento()]
 	{ 
 		if(rs.currentLevel == 0) {
-			cw.putInstruction("L1 NADA");
+			if(!rs.hasErrors()) cw.putInstruction("L1 NADA");
 		}
 	}
 	comando_composto()
 	{
-		cw.generateDeallocInstruction();
+		if(!rs.hasErrors()) cw.generateDeallocInstruction();
 	}
 }
 
@@ -171,24 +173,24 @@ void declaracao_variaveis(): {}
 	<COLON>
 	tipo() {
 		rs.process("4", null);
-		cw.generateAmenInstruction();
+		if(!rs.hasErrors()) cw.generateAmenInstruction();
 	}
 }
 
 /* 7. <lista de identificadores> ::= <identificador> {, <identificador>}                    */
 void lista_identificadores(): {
 	Token t;
-	int offsetAddress;
+	int offsetAddress = 0;
 }
 {
 	t = <IDENTIFIER> {
-		offsetAddress = cw.increaseAmenAcc(rs.currentLevel);
+		if(!rs.hasErrors()) offsetAddress = cw.increaseAmenAcc(rs.currentLevel);
 		rs.process("3", t, offsetAddress);
 	}
 	(
 		<COMMA>
 		t = <IDENTIFIER> {
-			offsetAddress = cw.increaseAmenAcc(rs.currentLevel);
+			if(!rs.hasErrors()) offsetAddress = cw.increaseAmenAcc(rs.currentLevel);
 			rs.process("3", t, offsetAddress);
 		}
 	)*
@@ -221,13 +223,13 @@ void declaracao_procedimento(): {
 	{ 
 		rs.setOffsetAddressOnParameters();
 		rs.setCachedProcedureLabel(cw.label_counter);
-		cw.generateProcedureEntryInstruction(rs.currentLevel);
+		if(!rs.hasErrors()) cw.generateProcedureEntryInstruction(rs.currentLevel);
 	}
 	bloco()
 	{ 
 		rs.process("8", null);
 		Symbol s = rs.getSymbolFromToken(t);
-		cw.generateProcedureReturnInstruction(s);
+		if(!rs.hasErrors()) cw.generateProcedureReturnInstruction(s);
 	}
 	<SEMICOLON>
 }
@@ -321,7 +323,7 @@ void chamada_procedimento(): {}
 	{ 
 		rs.process("24", rs.cachedToken);
 		if(rs.cachedProcedure.id != "read" && rs.cachedProcedure.id != "write")
-			cw.generateProcedureCallInstruction(rs.cachedProcedure);
+			if(!rs.hasErrors()) cw.generateProcedureCallInstruction(rs.cachedProcedure);
 	}
 }
 
@@ -337,7 +339,7 @@ void atribuicao(): {}
 	expressao()
 	{
 		rs.setExpressionType();
-		cw.generateStoreInstruction(s);
+		if(!rs.hasErrors()) cw.generateStoreInstruction(s);
 	}
 }
 
@@ -345,28 +347,28 @@ void atribuicao(): {}
 /* if <expressão> then <comando>                                                            */
 /* [else <comando>]                                                                         */
 void comando_condicional_1(): {
-	int falseLabel;
-	int afterElseLabel;
+	int falseLabel = 0;
+	int afterElseLabel = 0;
 }
 {
 	<IF>
 	expressao()
 	{
 		rs.setExpressionType();
-		falseLabel = cw.branchIfFalse();
+		if(!rs.hasErrors()) falseLabel = cw.branchIfFalse();
 	}
 	<THEN>
 	comando()
 	[
 		LOOKAHEAD(2)
-		{ afterElseLabel = cw.branch(); }
+		{ if(!rs.hasErrors()) afterElseLabel = cw.branch(); }
 		<ELSE>
 		{ 
-			cw.putInstruction("L"+ falseLabel + " NADA");
+			if(!rs.hasErrors()) cw.putInstruction("L"+ falseLabel + " NADA");
 		}
 		comando()
 		{ 
-			cw.putInstruction("L"+ afterElseLabel + " NADA");
+			if(!rs.hasErrors()) cw.putInstruction("L"+ afterElseLabel + " NADA");
 		}
 	]
 }
@@ -411,22 +413,22 @@ void elemento_case(): {}
 /* 21. <comando repetitivo 1> ::=                                                           */
 /* while <expressão> do <comando>                                                           */
 void comando_repetitivo_1(): {
-	int label;
+	int label = 0;
 }
 {
 	<WHILE>
-	{ cw.markLabel(); }
+	{ if(!rs.hasErrors()) cw.markLabel(); }
 	expressao()
 	{ 
 		rs.setExpressionType();
-		label = cw.branchIfFalse();
+		if(!rs.hasErrors()) label = cw.branchIfFalse();
 	}
 	<DO>
 	{
 		
 	}
 	comando()
-	{ cw.putInstruction("L"+label+" NADA"); }
+	{ if(!rs.hasErrors()) cw.putInstruction("L"+label+" NADA"); }
 }
 
 /* 22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]                  */
@@ -439,7 +441,7 @@ void expressao(): {
 		r = relacao()
 		expressao_simples()
 		{ 
-			cw.generateRelationInstruction(r);
+			if(!rs.hasErrors()) cw.generateRelationInstruction(r);
 		}
 	]
 }
@@ -482,7 +484,7 @@ void expressao_simples(): {
 			<OR> { instruction = "DISJ";}
 		)
 		termo()
-		{ cw.putInstruction(instruction); }
+		{ if(!rs.hasErrors()) cw.putInstruction(instruction); }
 	)*
 }
 
@@ -502,7 +504,7 @@ void termo(): {
 			<AND> { instruction = "CONJ"; }
 		)
 		fator()
-		{ cw.putInstruction(instruction); }
+		{ if(!rs.hasErrors()) cw.putInstruction(instruction); }
 	)*
 }
 
@@ -519,7 +521,7 @@ void fator(): {Token t;}
 	{ 
 		rs.process("26", t);
 		rs.typeCheckOnNumericFactor(t);
-		cw.generateLoadConstant(Integer.parseInt(t.toString()));
+		if(!rs.hasErrors()) cw.generateLoadConstant(Integer.parseInt(t.toString()));
 	}
 	|
 	<O_PAR> expressao() <C_PAR>
@@ -535,7 +537,7 @@ void variavel(): { Token t;}
 		rs.process("21", t);
 		rs.typeCheckOnFactor(t);
 		Symbol s = rs.getSymbolFromToken(t);
-		cw.generateLoadInstruction(s, classSet);
+		if(!rs.hasErrors()) cw.generateLoadInstruction(s, classSet);
 	}
 }
 
@@ -555,15 +557,18 @@ void lista_expressoes(): {
 		rs.setExpressionType();
 		rs.process("23", rs.cachedToken);
 		if(procedure.id == "write") {
-			cw.putInstruction("IMPR");
+			if(!rs.hasErrors()) cw.putInstruction("IMPR");
 		}
 	}
 	(
 		<COMMA>
 		{
 			if(procedure.id != "write" && procedure.id != "read") {
-				classSet =
+				try {
+					classSet =
 					rs.cachedProcedure.parameters.get(rs.cachedParameterCount).classSet;	
+				} catch(IndexOutOfBoundsException e) {
+				}
 			}
 		}
 		expressao()
@@ -571,7 +576,7 @@ void lista_expressoes(): {
 			rs.setExpressionType();
 			rs.process("23", rs.cachedToken);
 			if(procedure.id == "write") {
-				cw.putInstruction("IMPR");
+				if(!rs.hasErrors()) cw.putInstruction("IMPR");
 			}
 		}
 	)*
