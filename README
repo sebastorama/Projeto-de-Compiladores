@@ -1,3 +1,7 @@
 Implementação de um compilador para uma versão simplificada
 da linguagem Pascal para a disciplina "Introdução a Compilação",
 ministrada pela professora Sandra Maria Aluísio"
+
+Todos os códigos gerados à partir dos exemplos pedidos na especificação
+se encontram no diretório "generated_code/". Os códigos fonte utilizados
+se encontram em "examples/correct/8_*.pas".
