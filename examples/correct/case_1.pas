@@ -8,7 +8,11 @@ var
 procedure primeiros_primos(i : integer; var res : integer);
 begin
 	case i of
-		1: res := 1;
+		1: case res of
+			3, 4: res := i; 
+			5, 6: res := 2;
+			7, 8: res := 4
+		end;
 		2: res := 2;
 		3: res := 3;
 		4: res := 5;

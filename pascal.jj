@@ -384,39 +384,57 @@ void comando_condicional_1(): {
 /* case <expressão> of <elemento do case>                                                   */
 /* { ;  <elemento do case>} [else <comando>] end                                            */
 void comando_condicional_2(): {
-	int afterElseLabel = 0;
+	int afterCaseLabel = 0;
 }
 {
 	<CASE>
-	{ cw.startRecording(); }
+	{ 
+		// Start saving the expression resolution for later use
+		cw.startRecording();
+	}
 	expressao()
-	{ cw.stopRecording(); }
-	{
+	{ 
+		// Stop saving the expression resolution for later use
+		cw.stopRecording();
 		rs.setExpressionType();	
 	}
 	<OF>
-	{ if(!rs.hasErrors()) afterElseLabel = cw.label_counter++; }
+	{ 
+		// Save one Label for after the else statement
+		if(!rs.hasErrors()) afterCaseLabel = cw.label_counter++;
+	}
 	elemento_case()
-	{ if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterElseLabel); }
+	{ 
+		// After a Case Element, branch after the whole "case of ... else ..." statement
+		if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterCaseLabel);
+	}
 	(
-		{ if(!rs.hasErrors()){ 
-			cw.markLabel();
-			cw.playbackRecording();
+		<SEMICOLON>
+		{ 
+			if(!rs.hasErrors()){ 
+			cw.markLabel();         // Mark Label (ex: L3 NADA)
+			cw.playbackRecording(); // Load Expression Again
 			};
 		}
-		<SEMICOLON>
 		elemento_case()
-		{ if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterElseLabel); }
+		{ 
+			// After Case Element, branch after the "case of ... else ..." statement
+			if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterCaseLabel);
+		}
 	)*
+	{
+		// Mark Label (ex: L3 NADA)
+		if(!rs.hasErrors()) cw.markLabel();
+	}
 	[
-		{ if(!rs.hasErrors()) cw.markLabel(); }
 		<ELSE>
 		comando()
 	]
 	<END>
 	{
 		rs.process("31", null);
-		if(!rs.hasErrors()) cw.putInstruction("L"+afterElseLabel + " NADA");
+		// Mark the label after the "case of ... else ..." statement
+		if(!rs.hasErrors()) cw.putInstruction("L"+afterCaseLabel + " NADA");
 	}
 }
 
@@ -428,7 +446,9 @@ void elemento_case(): {}
 	{ 
 		rs.process("30", null);
 		if(!rs.hasErrors()) {
+			// Compare with the constant
 			cw.putInstruction("CMIG");
+			// Try the next label if this is not our constant
 			cw.putInstruction("DSVF L"+(cw.label_counter));
 		};
 	}
@@ -436,13 +456,16 @@ void elemento_case(): {}
 		<COMMA>
 		{ 
 			if(!rs.hasErrors()) {
+				// Load expression again
 				cw.playbackRecording();
 			};
 		}
 		constante()
 		{ 
 			rs.process("30", null);
+			// Compare with the constant
 			cw.putInstruction("CMIG");
+			// Try the next label if this is not our constant
 			cw.putInstruction("DSVF L"+cw.label_counter);
 		}
 	)*
