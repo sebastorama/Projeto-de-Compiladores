@@ -7,8 +7,12 @@ public class CodeWriter {
 	ArrayDeque<Integer> stack_pointer_offset;
 	public int label_counter;
 	ArrayList<String> output;
+	int startRecordingIndex;
+	int stopRecordingIndex;
 
 	public CodeWriter() {
+		this.startRecordingIndex = 0;
+		this.stopRecordingIndex = 0;
 		this.amen_acc = 0;
 		this.label_counter = 1;
 		this.stack_pointer_offset = new ArrayDeque<Integer>();
@@ -131,6 +135,22 @@ public class CodeWriter {
 	public void setReadInstruction() {
 		String s = this.output.get(this.output.size()-1);
 		this.output.set(this.output.size()-1, s.replace("CRVL", "ARMZ"));
+	}
+
+	public void startRecording() {
+		this.startRecordingIndex = this.output.size();
+		this.stopRecordingIndex = this.startRecordingIndex;
+	}
+
+	public void stopRecording() {
+		this.stopRecordingIndex = this.output.size()-1;
+	}
+
+	public void playbackRecording() {
+		int i;
+		for(i=this.startRecordingIndex; i<=this.stopRecordingIndex; i++) {
+			this.output.add(new String(this.output.get(i)));
+		}
 	}
 
 	public void printCode() {

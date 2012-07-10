@@ -388,17 +388,28 @@ void comando_condicional_2(): {
 }
 {
 	<CASE>
+	{ cw.startRecording(); }
 	expressao()
-	{ rs.setExpressionType(); }
+	{ cw.stopRecording(); }
+	{
+		rs.setExpressionType();	
+	}
 	<OF>
+	{ if(!rs.hasErrors()) afterElseLabel = cw.label_counter++; }
 	elemento_case()
-	{ if(!rs.hasErrors()) afterElseLabel = cw.branch(); }
+	{ if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterElseLabel); }
 	(
+		{ if(!rs.hasErrors()){ 
+			cw.markLabel();
+			cw.playbackRecording();
+			};
+		}
 		<SEMICOLON>
 		elemento_case()
 		{ if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterElseLabel); }
 	)*
 	[
+		{ if(!rs.hasErrors()) cw.markLabel(); }
 		<ELSE>
 		comando()
 	]
@@ -417,21 +428,25 @@ void elemento_case(): {}
 	{ 
 		rs.process("30", null);
 		if(!rs.hasErrors()) {
-			cw.putInstruction("CMDG");
-			cw.putInstruction("DSVF L"+cw.label_counter);
+			cw.putInstruction("CMIG");
+			cw.putInstruction("DSVF L"+(cw.label_counter));
 		};
 	}
 	(
 		<COMMA>
+		{ 
+			if(!rs.hasErrors()) {
+				cw.playbackRecording();
+			};
+		}
 		constante()
 		{ 
 			rs.process("30", null);
-			cw.putInstruction("CMDG");
+			cw.putInstruction("CMIG");
 			cw.putInstruction("DSVF L"+cw.label_counter);
 		}
 	)*
 	<COLON>
-	{ if(!rs.hasErrors()) cw.markLabel(); }
 	comando()
 }
 
