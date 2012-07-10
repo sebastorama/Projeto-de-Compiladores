@@ -89,5 +89,13 @@ test_8_13:
 	java -cp . Pascal < examples/correct/8_13.pas > generated_code/8_13.MEPA
 	cat generated_code/8_13.MEPA
 
+test_8_15:
+	java -cp . Pascal < examples/correct/8_15.pas > generated_code/8_15.MEPA
+	cat generated_code/8_15.MEPA
+
+test_8_21:
+	java -cp . Pascal < examples/correct/8_21.pas > generated_code/8_21.MEPA
+	cat generated_code/8_21.MEPA
+
 test:
 	java -cp . Pascal < teste.pas
