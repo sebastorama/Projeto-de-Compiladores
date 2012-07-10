@@ -127,33 +127,28 @@ void tipo(): { Token t = null;}
 }
 
 /* 4. <constante> ::= [+|-] (<identificador> | <numero_inteiro>)                            */
-void constante(): {
+void constante(JumpTable jt): {
 	Token t;
 	Token signal = null;
-	Token value = null;
-	boolean invr = false;
 }
 {
 	[
 		signal = <PLUS>
 		|
-		signal = <MINUS> { invr = true; }
+		signal = <MINUS>
 	]
 	(
 		t = <IDENTIFIER> {
 			rs.process("0''", t);
 			rs.cacheConstant(signal, t);
-			if(!rs.hasErrors()) cw.putInstruction("CRCT "+ rs.value);
 		}
 		|
 		t = <NUMBER> {
 			rs.process("0'''", t);
 			rs.cacheConstant(signal, t);
-			if(invr) rs.value = -rs.value;
-			cw.putInstruction("CRCT "+ rs.value);
 		}
-		{ value = t; }
 	)
+	{ jt.putConstant(rs.value); }
 }
 
 /* 5.  <parte de declarações de variáveis> ::=                                              */
@@ -384,93 +379,61 @@ void comando_condicional_1(): {
 /* case <expressão> of <elemento do case>                                                   */
 /* { ;  <elemento do case>} [else <comando>] end                                            */
 void comando_condicional_2(): {
-	int afterCaseLabel = 0;
+	JumpTable jt = new JumpTable();
 }
 {
 	<CASE>
-	{ 
-		// Start saving the expression resolution for later use
-		cw.startRecording();
-	}
+	{ cw.startRecording(); }
 	expressao()
 	{ 
-		// Stop saving the expression resolution for later use
 		cw.stopRecording();
 		rs.setExpressionType();	
+		jt.setCaseExpressionInstructions( cw.getRecording() );
+		jt.jumpTableLabel = cw.label_counter++;
+		jt.afterCaseLabel = cw.label_counter++;
+		
+		if(!rs.hasErrors())
+			cw.putInstruction("DSVS L"+jt.jumpTableLabel+"  { Go to Jump Table }");
 	}
 	<OF>
-	{ 
-		// Save one Label for after the else statement
-		if(!rs.hasErrors()) afterCaseLabel = cw.label_counter++;
-	}
-	elemento_case()
-	{ 
-		// After a Case Element, branch after the whole "case of ... else ..." statement
-		if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterCaseLabel);
-	}
+	elemento_case(jt)
 	(
 		<SEMICOLON>
-		{ 
-			if(!rs.hasErrors()){ 
-			cw.markLabel();         // Mark Label (ex: L3 NADA)
-			cw.playbackRecording(); // Load Expression Again
-			};
-		}
-		elemento_case()
-		{ 
-			// After Case Element, branch after the "case of ... else ..." statement
-			if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterCaseLabel);
-		}
+		elemento_case(jt)
 	)*
-	{
-		// Mark Label (ex: L3 NADA)
-		if(!rs.hasErrors()) cw.markLabel();
-	}
+	{ cw.processJumpTable(jt); }
 	[
 		<ELSE>
 		comando()
 	]
 	<END>
 	{
+		cw.putInstruction("L"+jt.afterCaseLabel+" NADA");
 		rs.process("31", null);
-		// Mark the label after the "case of ... else ..." statement
-		if(!rs.hasErrors()) cw.putInstruction("L"+afterCaseLabel + " NADA");
 	}
 }
 
 /* 20. <elemento do case> ::= <constante>                                                   */
 /* {, constante>} : <comando>                                                               */
-void elemento_case(): {}
+void elemento_case(JumpTable jt): {
+	jt.addJumpLine();
+}
 {
-	constante() 
+	constante(jt) 
 	{ 
 		rs.process("30", null);
-		if(!rs.hasErrors()) {
-			// Compare with the constant
-			cw.putInstruction("CMIG");
-			// Try the next label if this is not our constant
-			cw.putInstruction("DSVF L"+(cw.label_counter));
-		};
 	}
 	(
 		<COMMA>
-		{ 
-			if(!rs.hasErrors()) {
-				// Load expression again
-				cw.playbackRecording();
-			};
-		}
-		constante()
+		constante(jt)
 		{ 
 			rs.process("30", null);
-			// Compare with the constant
-			cw.putInstruction("CMIG");
-			// Try the next label if this is not our constant
-			cw.putInstruction("DSVF L"+cw.label_counter);
 		}
 	)*
 	<COLON>
+	{ if(!rs.hasErrors()) jt.setLabel(cw.markLabel()); }
 	comando()
+	{ if(!rs.hasErrors()) cw.putInstruction("DSVS L"+jt.afterCaseLabel); }
 }
 
 /* 21. <comando repetitivo 1> ::=                                                           */

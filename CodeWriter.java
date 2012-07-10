@@ -1,6 +1,7 @@
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
+import java.util.List;
 
 public class CodeWriter { 
 	public int amen_acc;
@@ -8,11 +9,10 @@ public class CodeWriter {
 	public int label_counter;
 	ArrayList<String> output;
 	int startRecordingIndex;
-	int stopRecordingIndex;
+	ArrayList<String> recordedOutput = null;
 
 	public CodeWriter() {
 		this.startRecordingIndex = 0;
-		this.stopRecordingIndex = 0;
 		this.amen_acc = 0;
 		this.label_counter = 1;
 		this.stack_pointer_offset = new ArrayDeque<Integer>();
@@ -139,18 +139,23 @@ public class CodeWriter {
 
 	public void startRecording() {
 		this.startRecordingIndex = this.output.size();
-		this.stopRecordingIndex = this.startRecordingIndex;
 	}
 
 	public void stopRecording() {
-		this.stopRecordingIndex = this.output.size()-1;
+		List<String> sublist = this.output.subList(
+				startRecordingIndex,
+				this.output.size()
+			);
+		this.recordedOutput = new ArrayList<String>(sublist);
+		sublist.clear();
 	}
 
-	public void playbackRecording() {
-		int i;
-		for(i=this.startRecordingIndex; i<=this.stopRecordingIndex; i++) {
-			this.output.add(new String(this.output.get(i)));
-		}
+	public ArrayList<String> getRecording() {
+		return recordedOutput;
+	}
+
+	public void processJumpTable(JumpTable jt) {
+		output.addAll(jt.toInstructions());
 	}
 
 	public void printCode() {

@@ -226,14 +226,12 @@ public class RS {
 	}
 
 	public void cacheConstant(Token signal, Token value) {
-		String signal_str = "";
-		String value_str = value.toString();
-		if(signal == null) {
-			signal_str = "";
-		} else {
-			signal_str = signal.toString();
+		int intValue = Integer.parseInt(value.toString());
+		if(signal != null && signal.toString().equals("-")) {
+			intValue = -intValue;
+			this.value = -this.value;
 		}
-		cachedConstant = signal_str + value_str;
+		cachedConstant = Integer.toString(intValue);
 		cachedConstantLine = value.beginLine;
 	}
 
