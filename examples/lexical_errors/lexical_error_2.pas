@@ -11,7 +11,7 @@ begin
 		i := i-1
 	end;
 	res := aux
-end
+end;
 
 begin
 	{
