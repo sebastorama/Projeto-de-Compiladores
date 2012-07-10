@@ -2,8 +2,10 @@ all: precompile_javacc compile_st compile_rs compile_cw apply_patches build_prec
 
 case_1:
 	java -cp . Pascal < examples/correct/case_1.pas > generated_code/case_1.MEPA
+	cat generated_code/case_1.MEPA
 case_2:
 	java -cp . Pascal < examples/correct/case_2.pas > generated_code/case_2.MEPA
+	cat generated_code/case_2.MEPA
 case_all: case_1 case_2
 
 semantic_error_1:
