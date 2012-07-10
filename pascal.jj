@@ -569,6 +569,8 @@ void lista_expressoes(): {
 		rs.process("23", rs.cachedToken);
 		if(procedure.id == "write") {
 			if(!rs.hasErrors()) cw.putInstruction("IMPR");
+		} else if(procedure.id == "read") {
+			if(!rs.hasErrors()) cw.setReadInstruction();
 		};
 	}
 	(

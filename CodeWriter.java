@@ -125,6 +125,11 @@ public class CodeWriter {
 		this.putInstruction("RTPR "+(s.level+1)+","+s.parameters.size());
 	}
 
+	public void setReadInstruction() {
+		String s = this.output.get(this.output.size()-1);
+		this.output.set(this.output.size()-1, s.replace("CRVL", "ARMZ"));
+	}
+
 	public void printCode() {
 		Iterator it = output.iterator();
 		while(it.hasNext()) {
