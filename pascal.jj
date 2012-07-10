@@ -325,7 +325,7 @@ void chamada_procedimento(): {}
 	]
 	{ 
 		rs.process("24", rs.cachedToken);
-		if(rs.cachedProcedure.id != "read" && rs.cachedProcedure.id != "write")
+		if(rs.cachedProcedure != null && rs.cachedProcedure.id != "read" && rs.cachedProcedure.id != "write")
 			if(!rs.hasErrors()) cw.generateProcedureCallInstruction(rs.cachedProcedure);
 	}
 }
@@ -556,10 +556,10 @@ void lista_expressoes(): {
 }
 {
 	{ 
-		if(procedure.id != "write" && procedure.id != "read") {
+		if(procedure != null && procedure.id != "write" && procedure.id != "read") {
 			classSet =
 				rs.cachedProcedure.parameters.get(0).classSet;
-		} else if(procedure.id == "read") {
+		} else if(procedure != null && procedure.id == "read") {
 			if(!rs.hasErrors()) cw.putInstruction("LEIT");
 		}
 	}
@@ -567,16 +567,16 @@ void lista_expressoes(): {
 	{ 
 		rs.setExpressionType();
 		rs.process("23", rs.cachedToken);
-		if(procedure.id == "write") {
+		if(procedure != null && procedure.id == "write") {
 			if(!rs.hasErrors()) cw.putInstruction("IMPR");
-		} else if(procedure.id == "read") {
+		} else if(procedure != null && procedure.id == "read") {
 			if(!rs.hasErrors()) cw.setReadInstruction();
 		};
 	}
 	(
 		<COMMA>
 		{
-			if(procedure.id != "write" && procedure.id != "read") {
+			if(procedure != null && procedure.id != "write" && procedure.id != "read") {
 				try {
 					classSet =
 					rs.cachedProcedure.parameters.get(rs.cachedParameterCount).classSet;	
@@ -588,9 +588,9 @@ void lista_expressoes(): {
 		{ 
 			rs.setExpressionType();
 			rs.process("23", rs.cachedToken);
-			if(procedure.id == "write") {
+			if(procedure != null && procedure.id == "write") {
 				if(!rs.hasErrors()) cw.putInstruction("IMPR");
-			} else if(procedure.id == "read") {
+			} else if(procedure != null && procedure.id == "read") {
 				if(!rs.hasErrors()) cw.setReadInstruction();
 			}
 		}

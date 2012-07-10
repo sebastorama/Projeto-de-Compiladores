@@ -116,7 +116,8 @@ public class CodeWriter {
 	}
 
 	public void generateDeallocInstruction() {
-		if(this.stack_pointer_offset.peekFirst() > 0) {
+		Integer sp = this.stack_pointer_offset.peekFirst();
+		if(sp != null && sp > 0) {
 			this.putInstruction("DMEN " + this.stack_pointer_offset.pop());
 		}
 	}
