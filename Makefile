@@ -97,5 +97,4 @@ test_8_21:
 	java -cp . Pascal < examples/correct/8_21.pas > generated_code/8_21.MEPA
 	cat generated_code/8_21.MEPA
 
-test:
-	java -cp . Pascal < teste.pas
+tests: test_8_4 test_8_5 test_8_9 test_8_11 test_8_13 test_8_15 test_8_21
