@@ -69,5 +69,25 @@ compile_rs:
 compile_cw:
 	javac -cp . CodeWriter.java
 
+test_8_4:
+	java -cp . Pascal < examples/correct/8_4.pas > generated_code/8_4.MEPA
+	cat generated_code/8_4.MEPA
+
+test_8_5:
+	java -cp . Pascal < examples/correct/8_5.pas > generated_code/8_5.MEPA
+	cat generated_code/8_5.MEPA
+
+test_8_9:
+	java -cp . Pascal < examples/correct/8_9.pas > generated_code/8_9.MEPA
+	cat generated_code/8_9.MEPA
+
+test_8_11:
+	java -cp . Pascal < examples/correct/8_11.pas > generated_code/8_11.MEPA
+	cat generated_code/8_11.MEPA
+
+test_8_13:
+	java -cp . Pascal < examples/correct/8_13.pas > generated_code/8_13.MEPA
+	cat generated_code/8_13.MEPA
+
 test:
 	java -cp . Pascal < teste.pas

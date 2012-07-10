@@ -95,19 +95,21 @@ void programa(): {}
 /* [<parte de declarações de variáveis>]                                                    */
 /* [<parte de declarações de procedimentos>]                                                */
 /* <comando composto>                                                                       */
-void bloco(): {}
+void bloco(): { 
+	int label = 0;
+	boolean branchFlag = false;
+}
 {
 	[parte_declaracao_variaveis()]
-	{ 
-		if(rs.currentLevel==0) { 
-		  if(!rs.hasErrors()) cw.branch();
+	[
+	  	{ 
+			if(!rs.hasErrors()) label = cw.branch();
+			branchFlag = true;
 		}
-	}
-	[parte_declaracao_procedimento()]
+		parte_declaracao_procedimento()
+	]
 	{ 
-		if(rs.currentLevel == 0) {
-			if(!rs.hasErrors()) cw.putInstruction("L1 NADA");
-		}
+	  if(!rs.hasErrors() && branchFlag) cw.markLabel(label);
 	}
 	comando_composto()
 	{
@@ -212,18 +214,19 @@ void parte_declaracao_procedimento(): {}
 /* [<parâmetros formais>] ; <bloco>                                                         */
 void declaracao_procedimento(): {
 	Token t;
+	int label = 0;
 }
 {
 	<PROCEDURE>
 	t = <IDENTIFIER> {
 		rs.process("5", t);
+		if(!rs.hasErrors()) label = cw.generateProcedureEntryInstruction(rs.currentLevel);
+		rs.setCachedProcedureLabel(label);
 	}
 	[parametros_formais()]
 	<SEMICOLON>
 	{ 
 		rs.setOffsetAddressOnParameters();
-		rs.setCachedProcedureLabel(cw.label_counter);
-		if(!rs.hasErrors()) cw.generateProcedureEntryInstruction(rs.currentLevel);
 	}
 	bloco()
 	{ 
@@ -414,10 +417,13 @@ void elemento_case(): {}
 /* while <expressão> do <comando>                                                           */
 void comando_repetitivo_1(): {
 	int label = 0;
+	int loopLabel = 0;
 }
 {
 	<WHILE>
-	{ if(!rs.hasErrors()) cw.markLabel(); }
+	{ if(!rs.hasErrors()) loopLabel = cw.markLabel(); 
+	
+	}
 	expressao()
 	{ 
 		rs.setExpressionType();
@@ -428,7 +434,10 @@ void comando_repetitivo_1(): {
 		
 	}
 	comando()
-	{ if(!rs.hasErrors()) cw.putInstruction("L"+label+" NADA"); }
+	{ 
+		if(!rs.hasErrors()) cw.putInstruction("DSVS L"+loopLabel);
+		if(!rs.hasErrors()) cw.putInstruction("L"+label+" NADA");
+	}
 }
 
 /* 22. <expressão> ::= <expressão simples> [<relação> <expressão simples>]                  */
@@ -550,6 +559,8 @@ void lista_expressoes(): {
 		if(procedure.id != "write" && procedure.id != "read") {
 			classSet =
 				rs.cachedProcedure.parameters.get(0).classSet;
+		} else if(procedure.id == "read") {
+			if(!rs.hasErrors()) cw.putInstruction("LEIT");
 		}
 	}
 	expressao()
@@ -558,7 +569,7 @@ void lista_expressoes(): {
 		rs.process("23", rs.cachedToken);
 		if(procedure.id == "write") {
 			if(!rs.hasErrors()) cw.putInstruction("IMPR");
-		}
+		};
 	}
 	(
 		<COMMA>

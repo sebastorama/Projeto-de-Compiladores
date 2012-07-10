@@ -30,8 +30,13 @@ public class CodeWriter {
 		return label_counter++;
 	}
 
-	public void markLabel() {
+	public int markLabel() {
 		this.putInstruction("L"+label_counter+" NADA");
+		return this.label_counter++;
+	}
+
+	public void markLabel(int label) {
+		this.putInstruction("L"+label+" NADA");
 	}
 
 	public int increaseAmenAcc(int level) {
@@ -84,9 +89,9 @@ public class CodeWriter {
 	}
 
 
-	public void generateProcedureEntryInstruction(int level) {
+	public int generateProcedureEntryInstruction(int level) {
 		this.putInstruction("L"+ this.label_counter + " ENPR " + level);
-		this.label_counter++;
+		return this.label_counter++;
 	}
 
 	public void generateRelationInstruction(Relation r) {
