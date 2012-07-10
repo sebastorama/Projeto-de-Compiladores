@@ -476,14 +476,16 @@ Relation relacao(): {}
 /* [+ | -] <termo> {(+ | - | or) <termo>}                                                   */
 void expressao_simples(): {
 	String instruction = "";
+	boolean invr = false;
 }
 {
 	[
 		<PLUS>
 		|
-		<MINUS>
+		<MINUS> { invr = true; }
 	]
 	termo()
+	{ if(!rs.hasErrors() && invr) cw.putInstruction("INVR"); }
 	(
 		(
 			<PLUS> { instruction = "SOMA";}
@@ -535,7 +537,7 @@ void fator(): {Token t;}
 	|
 	<O_PAR> expressao() <C_PAR>
 	|
-	<NOT> fator()
+	<NOT> fator() { if(!rs.hasErrors()) cw.putInstruction("INVR"); }
 }
 
 /* 27. <variável> ::= <identificador>                                                       */
