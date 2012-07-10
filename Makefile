@@ -36,7 +36,7 @@ lexical_error_all: lexical_error_1 lexical_error_2
 all_tests: tests case_all semantic_error_all sintatical_error_all lexical_error_all
 
 clean:
-	rm *.java && rm *.class
+	rm *.class
 
 apply_patches:
 	cp patches/* .
@@ -67,6 +67,7 @@ compile_rs:
 
 compile_cw:
 	javac -cp . CodeWriter.java
+	javac -cp . JumpTable.java
 
 test_8_4:
 	java -cp . Pascal < examples/correct/8_4.pas > generated_code/8_4.MEPA
