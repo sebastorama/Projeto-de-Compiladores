@@ -31,8 +31,9 @@ lexical_error_1:
 	- java -cp . Pascal < examples/lexical_errors/lexical_error_1.pas
 lexical_error_2:
 	- java -cp . Pascal < examples/lexical_errors/lexical_error_2.pas
+lexical_error_all: lexical_error_1 lexical_error_2
 
-all_tests: tests case_all semantic_error_all sintatical_error_all lexical_error_1
+all_tests: tests case_all semantic_error_all sintatical_error_all lexical_error_all
 
 clean:
 	rm *.java && rm *.class

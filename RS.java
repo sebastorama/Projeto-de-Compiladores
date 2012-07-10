@@ -226,12 +226,17 @@ public class RS {
 	}
 
 	public void cacheConstant(Token signal, Token value) {
-		int intValue = Integer.parseInt(value.toString());
-		if(signal != null && signal.toString().equals("-")) {
-			intValue = -intValue;
-			this.value = -this.value;
+		try {
+			int intValue = Integer.parseInt(value.toString());
+			if(signal != null && signal.toString().equals("-")) {
+				intValue = -intValue;
+				this.value = -this.value;
+			}
+			cachedConstant = Integer.toString(intValue);
+		// Yeah, Im a terrible person doing controw flow with exceptions
+		} catch(NumberFormatException e) {
+			cachedConstant = value.toString();
 		}
-		cachedConstant = Integer.toString(intValue);
 		cachedConstantLine = value.beginLine;
 	}
 
