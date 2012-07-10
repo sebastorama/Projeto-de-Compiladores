@@ -1,14 +1,10 @@
 all: precompile_javacc compile_st compile_rs compile_cw apply_patches build_precompiled_javacc
 
 correct_1:
-	java -cp . Pascal < examples/correct/correct_1.pas
+	java -cp . Pascal < examples/correct/correct_1.pas > generated_code/correct_1.MEPA
 correct_2:
-	java -cp . Pascal < examples/correct/correct_2.pas
-correct_3:
-	java -cp . Pascal < examples/correct/correct_3.pas
-correct_4:
-	java -cp . Pascal < examples/correct/correct_4.pas
-correct_all: correct_1 correct_2 correct_3 correct_4
+	java -cp . Pascal < examples/correct/correct_2.pas > generated_code/correct_2.MEPA
+correct_all: correct_1 correct_2
 
 semantic_error_1:
 	- java -cp . Pascal < examples/semantic_errors/semantic_error_1.pas
@@ -34,7 +30,7 @@ lexical_error_1:
 lexical_error_2:
 	- java -cp . Pascal < examples/lexical_errors/lexical_error_2.pas
 
-all_tests: correct_all semantic_error_all sintatical_error_all lexical_error_1
+all_tests: tests correct_all semantic_error_all sintatical_error_all lexical_error_1
 
 clean:
 	rm *.java && rm *.class

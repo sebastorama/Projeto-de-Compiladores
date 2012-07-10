@@ -131,22 +131,26 @@ void constante(): {
 	Token t;
 	Token signal = null;
 	Token value = null;
+	boolean invr = false;
 }
 {
 	[
 		signal = <PLUS>
 		|
-		signal = <MINUS>
+		signal = <MINUS> { invr = true; }
 	]
 	(
 		t = <IDENTIFIER> {
 			rs.process("0''", t);
 			rs.cacheConstant(signal, t);
+			if(!rs.hasErrors()) cw.putInstruction("CRCT "+ rs.value);
 		}
 		|
 		t = <NUMBER> {
 			rs.process("0'''", t);
 			rs.cacheConstant(signal, t);
+			if(invr) rs.value = -rs.value;
+			cw.putInstruction("CRCT "+ rs.value);
 		}
 		{ value = t; }
 	)
@@ -379,23 +383,30 @@ void comando_condicional_1(): {
 /* 19. <comando condicional 2> ::=                                                          */
 /* case <expressão> of <elemento do case>                                                   */
 /* { ;  <elemento do case>} [else <comando>] end                                            */
-void comando_condicional_2(): {}
+void comando_condicional_2(): {
+	int afterElseLabel = 0;
+}
 {
 	<CASE>
 	expressao()
 	{ rs.setExpressionType(); }
 	<OF>
 	elemento_case()
+	{ if(!rs.hasErrors()) afterElseLabel = cw.branch(); }
 	(
 		<SEMICOLON>
 		elemento_case()
+		{ if(!rs.hasErrors()) cw.putInstruction("DSVS L"+afterElseLabel); }
 	)*
 	[
 		<ELSE>
 		comando()
 	]
 	<END>
-	{ rs.process("31", null); }
+	{
+		rs.process("31", null);
+		if(!rs.hasErrors()) cw.putInstruction("L"+afterElseLabel + " NADA");
+	}
 }
 
 /* 20. <elemento do case> ::= <constante>                                                   */
@@ -403,13 +414,24 @@ void comando_condicional_2(): {}
 void elemento_case(): {}
 {
 	constante() 
-	{ rs.process("30", null); }
+	{ 
+		rs.process("30", null);
+		if(!rs.hasErrors()) {
+			cw.putInstruction("CMDG");
+			cw.putInstruction("DSVF L"+cw.label_counter);
+		};
+	}
 	(
 		<COMMA>
 		constante()
-		{ rs.process("30", null); }
+		{ 
+			rs.process("30", null);
+			cw.putInstruction("CMDG");
+			cw.putInstruction("DSVF L"+cw.label_counter);
+		}
 	)*
 	<COLON>
+	{ if(!rs.hasErrors()) cw.markLabel(); }
 	comando()
 }
 

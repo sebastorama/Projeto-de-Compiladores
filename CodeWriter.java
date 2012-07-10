@@ -64,6 +64,8 @@ public class CodeWriter {
 					this.putInstruction("CRVL "+s.level+","+ s.offsetAddress);
 				else // reference
 					this.putInstruction("CRVI "+s.level+","+ s.offsetAddress);
+			} else if(s.category == Category.constant) {
+				this.putInstruction("CRCT "+s.value);
 			}
 		} else {
 			if(s.classSet)
